@@ -7,6 +7,8 @@ import org.example.porti.namecard.model.NamecardDto;
 import org.example.porti.user.UserRepository;
 import org.example.porti.user.model.AuthUserDetails;
 import org.example.porti.user.model.User;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,9 +21,12 @@ public class NamecardService {
     private final NamecardRepository namecardRepository;
     private final UserRepository userRepository;
 
-    public List<NamecardDto.List> list() {
-        List<Namecard> namecardList = namecardRepository.findAll();
-        return namecardList.stream().map(NamecardDto.List::toDto).toList();
+    public NamecardDto.SliceRes list(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        Slice<Namecard> result = namecardRepository.findAll(pageRequest);
+
+        return NamecardDto.SliceRes.toDto(result);
     }
 
     @Transactional

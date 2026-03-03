@@ -2,22 +2,34 @@ package org.example.porti.namecard.model;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
-import org.example.porti.user.model.AuthUserDetails;
-import org.example.porti.user.model.User;
+import org.springframework.data.domain.Slice;
+
+import java.util.List;
 
 public class NamecardDto {
     @Getter
     @Builder
-    public static class List{
+    public static class SliceRes{
+        private List<ListRes> namecardList;
+
+        public static SliceRes toDto(Slice<Namecard> result){
+            return SliceRes.builder()
+                    .namecardList(result.get().map(NamecardDto.ListRes::toDto).toList())
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class ListRes{
         private Long idx;
         private String title;
         private String layout;
         private String color;
         private Long user;
 
-        public static NamecardDto.List toDto(Namecard entity){
-            return List.builder()
+        public static NamecardDto.ListRes toDto(Namecard entity){
+            return ListRes.builder()
                     .idx(entity.getIdx())
                     .color(entity.getColor())
                     .title(entity.getTitle())

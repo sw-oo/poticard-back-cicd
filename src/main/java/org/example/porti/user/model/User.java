@@ -19,9 +19,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
-    private String email;
-    private String name;
-    private String phone;
+    private String email; // required
+    private String name; // required
+    private String phone; // required for private, not for enterprise
     private String gender;
     private String address;
     private String profileImage;
@@ -46,5 +46,5 @@ public class User {
     @JoinColumn(name="namecard_idx")
     private Namecard namecard;
 
-    
+
 }

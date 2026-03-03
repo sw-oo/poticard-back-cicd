@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,6 +24,8 @@ public class Namecard {
     private String title;
     private String layout;
     private String color;
+    private String url;
+    private List<String> keywords;
 
     @CreatedDate
     @Column(updatable = false)
@@ -36,10 +39,12 @@ public class Namecard {
     private User user;
 
     // Namecard 엔티티 내부
-    public void update(String title, String color, String layout) {
+    public void update(String title, String color, String layout, String url, List<String> keywords) {
         this.title = title;
         this.color = color;
         this.layout = layout;
+        this.url = url;
+        this.keywords = keywords;
     }
 
 }

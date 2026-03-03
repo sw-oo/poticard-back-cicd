@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -39,8 +40,13 @@ public class NamecardService {
             return Namecard.builder().user(userEntity).build();
         });
 
-        namecard.update(dto.getTitle(), dto.getColor(), dto.getLayout());
+        namecard.update(dto.getTitle(), dto.getColor(), dto.getLayout(), dto.getUrl(), dto.getKeywords());
 
         namecardRepository.save(namecard);
+    }
+
+    public NamecardDto.NamecardRes singleUser(Long userId) {
+        Namecard result = namecardRepository.findByUserIdx(userId).orElseThrow(()->new EntityNotFoundException("지정한 사용자를 찾을 수 없습니다."));
+        return NamecardDto.NamecardRes.toDto(result);
     }
 }

@@ -11,12 +11,12 @@ import static org.example.porti.common.model.BaseResponseStatus.SUCCESS;
 @AllArgsConstructor
 public class BaseResponse<T> {
     private Boolean isSuccess;
-    private T result;
+    private T data;
 
-    public static <T> BaseResponse success(T result) {
+    public static <T> BaseResponse success(T data) {
         return new BaseResponse(
                 SUCCESS.isSuccess(),
-                result
+                data
         );
     }
 
@@ -27,10 +27,10 @@ public class BaseResponse<T> {
         );
     }
 
-    public static <T> BaseResponse fail(BaseResponseStatus status, T result) {
+    public static <T> BaseResponse fail(BaseResponseStatus status, T data) {
         return new BaseResponse(
                 status.isSuccess(),
-                result
+                data
         );
     }
 }

@@ -25,6 +25,12 @@ public class NamecardController {
         return ResponseEntity.ok(BaseResponse.success(dto));
     }
 
+    @GetMapping("/singleUser")
+    public ResponseEntity singleUser (@RequestParam Long userId){
+        NamecardDto.NamecardRes dto = namecardService.singleUser(userId);
+        return ResponseEntity.ok(BaseResponse.success(dto));
+    }
+
     @PostMapping("/reg")
     public ResponseEntity register(
             @RequestBody NamecardDto.Register dto,

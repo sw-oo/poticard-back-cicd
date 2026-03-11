@@ -6,15 +6,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.data.domain.Page;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CommunityDto {
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm:ss");
+    private static final String DATE_TIME_PATTERN = "yyyy-MM-dd-HH:mm:ss";
 
     @Getter
     @Builder
@@ -41,17 +41,17 @@ public class CommunityDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class RegReq {
-        @Schema(description = "카테고리", required = true, example = "QNA")
+        @Schema(description = "카테고리", requiredMode = Schema.RequiredMode.REQUIRED, example = "QNA")
         private String category;
 
-        @Schema(description = "제목", required = true, example = "제목01")
+        @Schema(description = "제목", requiredMode = Schema.RequiredMode.REQUIRED, example = "제목01")
         private String title;
 
         @Schema(description = "태그를 쉼표로 구분해서 입력", example = "Spring, JPA, MySQL")
         private String tags;
 
         @JsonAlias("body")
-        @Schema(description = "내용", required = true, example = "내용01")
+        @Schema(description = "내용", requiredMode = Schema.RequiredMode.REQUIRED, example = "내용01")
         private String contents;
 
         @Schema(description = "익명 여부", example = "false")
@@ -177,11 +177,10 @@ public class CommunityDto {
                 .collect(Collectors.joining(","));
     }
 
-    private static String formatDateTime(LocalDateTime dateTime) {
+    private static String formatDateTime(Date dateTime) {
         if (dateTime == null) {
             return null;
         }
-
-        return dateTime.format(DATE_TIME_FORMATTER);
+        return new SimpleDateFormat(DATE_TIME_PATTERN).format(dateTime);
     }
 }

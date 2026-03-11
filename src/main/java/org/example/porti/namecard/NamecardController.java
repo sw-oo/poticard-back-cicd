@@ -16,12 +16,18 @@ import java.util.List;
 public class NamecardController {
     private final NamecardService namecardService;
 
+//    @GetMapping("/list")
+//    public ResponseEntity list(
+//            @RequestParam(required = true, defaultValue = "0") int page,
+//            @RequestParam(required = true, defaultValue = "10") int size
+//            ){
+//        NamecardDto.SliceRes dto = namecardService.list(page, size);
+//        return ResponseEntity.ok(BaseResponse.success(dto));
+//    }
+
     @GetMapping("/list")
-    public ResponseEntity list(
-            @RequestParam(required = true, defaultValue = "0") int page,
-            @RequestParam(required = true, defaultValue = "10") int size
-            ){
-        NamecardDto.SliceRes dto = namecardService.list(page, size);
+    public ResponseEntity list(){
+        List<NamecardDto.NamecardRes> dto = namecardService.list();
         return ResponseEntity.ok(BaseResponse.success(dto));
     }
 

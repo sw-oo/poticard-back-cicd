@@ -4,6 +4,8 @@ package org.example.porti.namecard.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.porti.user.model.User;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -26,6 +28,8 @@ public class Namecard {
     private String layout;
     private String color;
     private String url;
+
+    @JdbcTypeCode(SqlTypes.JSON)
     private List<String> keywords;
 
     @CreatedDate
@@ -35,8 +39,9 @@ public class Namecard {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    @Setter
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_idx")
+    @JoinColumn(name = "user_idx")
     private User user;
 
     // Namecard 엔티티 내부
@@ -53,7 +58,6 @@ public class Namecard {
         if (StringUtils.hasText(dto.getUrl())) {
             this.url = dto.getUrl();
         }
-
         if (dto.getKeywords() != null && !dto.getKeywords().isEmpty()) {
             this.keywords = dto.getKeywords();
         }

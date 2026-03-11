@@ -12,6 +12,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -22,27 +23,36 @@ public class NamecardService {
     private final NamecardRepository namecardRepository;
     private final UserRepository userRepository;
 
-    public NamecardDto.SliceRes list(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
+//    public NamecardDto.SliceRes list(int page, int size) {
+//        PageRequest pageRequest = PageRequest.of(page, size);
+//
+//        Slice<Namecard> result = namecardRepository.findAll(pageRequest);
+//
+//        return NamecardDto.SliceRes.toDto(result);
+//    }
 
-        Slice<Namecard> result = namecardRepository.findAll(pageRequest);
-
-        return NamecardDto.SliceRes.toDto(result);
+    public List<NamecardDto.NamecardRes> list(){
+        List<Namecard> namecardList = namecardRepository.findAll();
+        return namecardList.stream().map(NamecardDto.NamecardRes::toDto).toList();
     }
 
     @Transactional
     public void reg(NamecardDto.Register dto, AuthUserDetails user) {
-        Long userIdx = user.getIdx();
-
-        Namecard namecard = namecardRepository.findByUserIdx(userIdx).orElseGet(()->{
-            User userEntity = userRepository.findById(userIdx)
-                    .orElseThrow(()->new EntityNotFoundException("사용자를 찾을 수 없습니다."));
-            return Namecard.builder().user(userEntity).build();
-        });
-
-        namecard.update(dto);
-
-//        namecardRepository.save(namecard);
+        User userEntity = userRepository.findById(user.getIdx()).orElseThrow();
+        namecardRepository.findByUserIdx(user.getIdx())
+                .ifPresentOrElse(
+                        currentNamecard ->{
+                            currentNamecard.update(dto);
+//                            currentNamecard.setUser(userEntity);
+                        },
+                        () -> {
+                            Namecard newNamecard = new Namecard();
+                            newNamecard.update(dto);
+                            newNamecard.setUser(userEntity);
+                            namecardRepository.save(newNamecard);
+                            userEntity.assignNamecard(newNamecard);
+                        }
+                );
     }
 
     public NamecardDto.NamecardRes singleUser(Long userId) {

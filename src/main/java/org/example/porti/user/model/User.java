@@ -43,9 +43,12 @@ public class User {
     private String role;
 
     // 관계
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="namecard_idx")
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private Namecard namecard;
+
+    public void assignNamecard(Namecard namecard) {
+        this.namecard = namecard;
+    }
 
     public void updateNonEssential(UserDto.EditNonEssentialReq dto){
         if (StringUtils.hasText(dto.getAddress())) {

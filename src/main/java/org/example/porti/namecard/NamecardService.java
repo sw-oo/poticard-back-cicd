@@ -40,9 +40,9 @@ public class NamecardService {
             return Namecard.builder().user(userEntity).build();
         });
 
-        namecard.update(dto.getTitle(), dto.getColor(), dto.getLayout(), dto.getUrl(), dto.getKeywords());
+        namecard.update(dto);
 
-        namecardRepository.save(namecard);
+//        namecardRepository.save(namecard);
     }
 
     public NamecardDto.NamecardRes singleUser(Long userId) {

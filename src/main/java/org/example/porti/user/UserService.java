@@ -64,8 +64,8 @@ public class UserService implements UserDetailsService {
     public void editNonEssential(UserDto.EditNonEssentialReq dto, AuthUserDetails user) {
         User update = userRepository.findById(user.getIdx()).orElseThrow();
         update.updateNonEssential(dto);
-        log.debug(update.getIdx().toString());
-        log.debug(update.getAddress());
+//        log.debug(update.getIdx().toString());
+//        log.debug(update.getAddress());
 //        userRepository.save(update);
     }
 

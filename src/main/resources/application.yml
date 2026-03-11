@@ -6,8 +6,27 @@ project:
   upload:
     path: ${UPLOAD_PATH}
 
-spring:
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus, metrics
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  tracing:
+    #    enabled: false
+    sampling:
+      probability: 1.0   # 모든 요청에 대한 데이터를 수집하겠다.
+  otlp:
+    tracing:
+      endpoint: ${JAEGER_URL}
 
+spring:
   security:
     oauth2:
       client:
@@ -47,3 +66,4 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.orm.jdbc.bind: trace
+    org.example: debug

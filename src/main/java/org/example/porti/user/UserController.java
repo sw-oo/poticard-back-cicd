@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
@@ -49,6 +50,12 @@ public class UserController {
         }
 
         return ResponseEntity.ok("로그인 실패");
+    }
+
+    @PostMapping("/nonessential")
+    public ResponseEntity editNonEssential(@RequestBody UserDto.EditNonEssentialReq dto, @AuthenticationPrincipal AuthUserDetails user) {
+        userService.editNonEssential(dto,user);
+        return ResponseEntity.ok("뾰로롱");
     }
 
 }

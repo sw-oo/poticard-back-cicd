@@ -4,6 +4,8 @@ package org.example.porti.user.model;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.swing.text.html.parser.Entity;
+
 public class UserDto {
 
     @Getter
@@ -74,4 +76,25 @@ public class UserDto {
                     .build();
         }
     }
+
+    @Builder
+    @Getter
+    public static class EditNonEssentialReq {
+        private String address;
+        private String affiliation;
+        private String career;
+        private String gender;
+        private String profile_image;
+        public User from(Long idx) {
+            return User.builder()
+                    .idx(idx)
+                    .address(this.address)
+                    .affiliation(this.affiliation)
+                    .career(this.career)
+                    .gender(this.gender)
+                    .profileImage(this.profile_image)
+                    .build();
+        }
+    }
+
 }

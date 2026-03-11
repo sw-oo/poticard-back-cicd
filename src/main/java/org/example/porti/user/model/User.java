@@ -46,5 +46,13 @@ public class User {
     @JoinColumn(name="namecard_idx")
     private Namecard namecard;
 
+    public void updateNonEssential(UserDto.EditNonEssentialReq dto){
+        this.address=dto.getAddress();
+        this.affiliation=dto.getAffiliation();
+        this.career=dto.getCareer();
+        this.gender=dto.getGender();
+        this.profileImage=dto.getProfile_image();
+        this.updatedAt=LocalDateTime.now();
+    }
 
 }

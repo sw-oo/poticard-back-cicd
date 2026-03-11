@@ -3,6 +3,7 @@ package org.example.porti.user.model;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import javax.swing.text.html.parser.Entity;
 

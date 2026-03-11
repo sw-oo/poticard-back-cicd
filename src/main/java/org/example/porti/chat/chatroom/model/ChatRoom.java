@@ -23,4 +23,8 @@ public class ChatRoom extends BaseEntity {
     @ManyToOne // 게스트 유저와 1:N 관계
     @JoinColumn(name = "guest_user_idx")
     private User guestUser;
+
+    public User getOpponent(Long currentUserIdx) {
+        return this.hostUser.getIdx().equals(currentUserIdx) ? this.guestUser : this.hostUser;
+    }
 }

@@ -6,6 +6,8 @@ import org.example.porti.portfolio.model.Portfolio;
 import org.example.porti.portfolio.model.PortfolioDto;
 import org.example.porti.section.model.Section;
 import org.example.porti.section.model.SectionDto;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,8 +39,9 @@ public class PortfolioService {
         return PortfolioDto.Res.from(portfolio);
     }
 
-    public List<PortfolioDto.portRes> list() {
-        List<Portfolio> portfolioList = portfolioRepository.findAll();
+    public List<PortfolioDto.portRes> list(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<Portfolio> portfolioList = portfolioRepository.findAll(pageable).getContent();
         return portfolioList.stream().map(PortfolioDto.portRes::from).toList();
     }
 }

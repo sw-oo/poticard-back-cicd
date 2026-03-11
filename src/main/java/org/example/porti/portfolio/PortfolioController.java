@@ -28,10 +28,11 @@ public class PortfolioController {
         return ResponseEntity.ok(portfolioService.read(idx));
     }
 
-    // 포트폴리오 목록 조회
+    // 포트폴리오 목록 조회(페이징 처리)
     @GetMapping("/list")
-    public ResponseEntity list() {
-        List<PortfolioDto.portRes> dto = portfolioService.list();
+    public ResponseEntity list(@RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "10") int size) {
+        List<PortfolioDto.portRes> dto = portfolioService.list(page, size);
 
         Map<String, Object> response = new HashMap<>();
         response.put("isSuccess", true);

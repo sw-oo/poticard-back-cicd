@@ -43,12 +43,14 @@ public class UserDto {
         private Long idx;
         private String email;
         private String name;
+        private String role;
 
         public static SignupRes from(User entity) {
             return SignupRes.builder()
                     .idx(entity.getIdx())
                     .email(entity.getEmail())
                     .name(entity.getName())
+                    .role(entity.getRole())
                     .build();
         }
     }

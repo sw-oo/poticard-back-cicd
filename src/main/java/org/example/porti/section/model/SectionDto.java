@@ -9,9 +9,11 @@ public class SectionDto {
     @NoArgsConstructor
     @Builder
     public static class Req {
+        private Long idx;
         private String sectionTitle;
         private String contents;
         private Integer sectionOrder;
+        private boolean isVisible;
 
         public Section toEntity() {
             return Section.builder()
@@ -31,6 +33,7 @@ public class SectionDto {
         private String sectionTitle;
         private String contents;
         private Integer sectionOrder;
+        private boolean isVisible;
 
         public static Res from(Section entity) {
             return Res.builder()
@@ -38,6 +41,7 @@ public class SectionDto {
                     .sectionTitle(entity.getSectionTitle())
                     .contents(entity.getContents())
                     .sectionOrder(entity.getSectionOrder())
+                    .isVisible(entity.isVisible())
                     .build();
         }
     }

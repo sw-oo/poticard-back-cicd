@@ -53,6 +53,7 @@ public class PortfolioController {
         return ResponseEntity.ok(BaseResponse.success("키워드가 저장되었습니다."));
     }
 
+    // 포트폴리오 스타일 저장
     @PatchMapping("/{idx}/style")
     public ResponseEntity updateStyle(@PathVariable Long idx, @RequestBody PortfolioDto.Req dto) {
         portfolioService.updateStyle(idx, dto);

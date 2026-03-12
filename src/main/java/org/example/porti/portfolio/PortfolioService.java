@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,6 +27,9 @@ public class PortfolioService {
     public Long create(PortfolioDto.Req dto) {
         Portfolio portfolio = dto.toEntity();
 
+        if (portfolio.getSectionList() == null) {
+            portfolio.setSectionList(new ArrayList<>());
+        }
         if (dto.getSectionList() != null) {
             for (SectionDto.Req sectionReq : dto.getSectionList()) {
                 Section section = sectionReq.toEntity();

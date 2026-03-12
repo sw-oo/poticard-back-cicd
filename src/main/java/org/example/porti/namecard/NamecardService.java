@@ -56,7 +56,7 @@ public class NamecardService {
     }
 
     public NamecardDto.NamecardRes singleUser(Long userId) {
-        Namecard result = namecardRepository.findByUserIdx(userId).orElseThrow(()->new EntityNotFoundException("지정한 사용자를 찾을 수 없습니다."));
+        Namecard result = namecardRepository.findByUserIdx(userId).orElseThrow();
         return NamecardDto.NamecardRes.toDto(result);
     }
 }

@@ -41,7 +41,7 @@ public class Namecard {
 
     @Setter
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_idx")
+    @JoinColumn(name = "user_idx", unique = true)
     private User user;
 
     // Namecard 엔티티 내부

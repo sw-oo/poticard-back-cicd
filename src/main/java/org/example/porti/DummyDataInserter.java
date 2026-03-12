@@ -35,8 +35,8 @@ public class DummyDataInserter {
             conn.setAutoCommit(false);
 
 
-            int totalCount = 10000;
-            int batchSize = 1000; // 1000건씩 끊어서 DB에 전송 (메모리 부족 방지)
+            int totalCount = 1000;
+            int batchSize = 100; // 1000건씩 끊어서 DB에 전송 (메모리 부족 방지)
             Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
             for (int i = 1; i <= totalCount; i++) {

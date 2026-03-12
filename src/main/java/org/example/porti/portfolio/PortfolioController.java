@@ -20,8 +20,9 @@ public class PortfolioController {
     // 포트폴리오 생성
     @PostMapping("/create")
     public ResponseEntity create(@RequestBody PortfolioDto.Req dto) {
-        portfolioService.create(dto);
-        return ResponseEntity.ok(BaseResponse.success(BaseResponseStatus.SUCCESS));
+        Long newIdx = portfolioService.create(dto);
+
+        return ResponseEntity.ok(BaseResponse.success(newIdx));
     }
 
     // 포트폴리오 단일 조회
@@ -40,5 +41,21 @@ public class PortfolioController {
         response.put("isSuccess", true);
         response.put("result", dto);
         return ResponseEntity.ok(BaseResponse.success(response));
+    }
+
+    // 포트폴리오 키워드 저장
+    @PatchMapping("/{idx}/keywords")
+    public ResponseEntity updateKeywords(
+            @PathVariable Long idx,
+            @RequestBody List<String> keywords) {
+
+        portfolioService.updateKeywords(idx, keywords);
+        return ResponseEntity.ok(BaseResponse.success("키워드가 저장되었습니다."));
+    }
+
+    @PatchMapping("/{idx}/style")
+    public ResponseEntity updateStyle(@PathVariable Long idx, @RequestBody PortfolioDto.Req dto) {
+        portfolioService.updateStyle(idx, dto);
+        return ResponseEntity.ok(BaseResponse.success("스타일 설정이 저장되었습니다."));
     }
 }

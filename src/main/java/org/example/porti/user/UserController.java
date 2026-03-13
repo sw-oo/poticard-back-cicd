@@ -7,12 +7,15 @@ import org.example.porti.user.model.AuthUserDetails;
 import org.example.porti.user.model.UserDto;
 import org.example.porti.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @CrossOrigin
 @RequestMapping("/user")
@@ -66,6 +69,13 @@ public class UserController {
     public ResponseEntity editNonEssential(@RequestBody UserDto.EditNonEssentialReq dto, @AuthenticationPrincipal AuthUserDetails user) {
         userService.editNonEssential(dto,user);
         return ResponseEntity.ok(BaseResponse.success(BaseResponseStatus.SUCCESS));
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity verify(@RequestParam String uuid) {
+        userService.verify(uuid);
+        // 인증 성공하면 프론트로 리다이렉트
+        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).location(URI.create("http://localhost:5173")).build();
     }
 
 }

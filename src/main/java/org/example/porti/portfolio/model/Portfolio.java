@@ -28,6 +28,8 @@ public class Portfolio {
     private String fontFamily;  // 글꼴
     private String layoutType;  // 레이아웃
 
+    private String Image; // 프로젝트 대표 이미지 경로 저장
+
     @OneToMany(mappedBy = "portfolio", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Section> sectionList = new ArrayList<>();

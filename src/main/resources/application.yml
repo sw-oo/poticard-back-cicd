@@ -27,6 +27,28 @@ management:
       endpoint: ${JAEGER_URL}
 
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_ADDR}
+    password: ${MAIL_PASS}
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+            required: true
+          auth: true
+          timeout: 5000
+  cloud:
+    aws:
+      credentials:
+        access-key: ${AWS_ACCESS_KEY}
+        secret-key: ${AWS_SECRET_KEY}
+      s3:
+        bucket: be24-hun // 본인 S3 버킷 이름
+      region:
+        static: ap-northeast-2
   security:
     oauth2:
       client:

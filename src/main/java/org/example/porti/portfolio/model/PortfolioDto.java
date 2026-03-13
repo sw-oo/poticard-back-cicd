@@ -23,7 +23,7 @@ public class PortfolioDto {
         private String fontFamily;
         private String layoutType;
 
-        public Portfolio toEntity() {
+        public Portfolio toEntity(String imageUrl) {
             return Portfolio.builder()
                     .title(this.title)
                     .period(this.period)
@@ -31,6 +31,7 @@ public class PortfolioDto {
                     .accentColor(this.accentColor)
                     .fontFamily(this.fontFamily)
                     .layoutType(this.layoutType)
+                    .Image(imageUrl)
                     .build();
         }
     }
@@ -49,6 +50,7 @@ public class PortfolioDto {
         private String accentColor;
         private String fontFamily;
         private String layoutType;
+        private String Image;
 
         private List<SectionDto.Res> sectionList;
 
@@ -64,6 +66,7 @@ public class PortfolioDto {
                     .accentColor(entity.getAccentColor())
                     .fontFamily(entity.getFontFamily())
                     .layoutType(entity.getLayoutType())
+                    .Image(entity.getImage())
                     .sectionList(entity.getSectionList().stream().map(SectionDto.Res::from).toList())
                     .build();
         }
@@ -75,11 +78,13 @@ public class PortfolioDto {
     public static class portRes {
         private Long idx;
         private String title;
+        private String Image;
 
         public static portRes from(Portfolio entity) {
             return portRes.builder()
                     .idx(entity.getIdx())
                     .title(entity.getTitle())
+                    .Image(entity.getImage())
                     .build();
         }
     }

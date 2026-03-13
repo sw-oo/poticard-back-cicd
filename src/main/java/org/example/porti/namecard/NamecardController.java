@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NamecardController {
     private final NamecardService namecardService;
-
+    // 명함 리스트(슬라이스 처리)
     @GetMapping("/list")
     public ResponseEntity list(
             @RequestParam(required = true, defaultValue = "0") int page,
@@ -30,18 +30,24 @@ public class NamecardController {
 //        List<NamecardDto.NamecardRes> dto = namecardService.list();
 //        return ResponseEntity.ok(BaseResponse.success(dto));
 //    }
-
+    // 특정 한명의 명함 불러오기
     @GetMapping("/singleUser")
     public ResponseEntity singleUser (@RequestParam Long userId){
         NamecardDto.NamecardRes dto = namecardService.singleUser(userId);
         return ResponseEntity.ok(BaseResponse.success(dto));
     }
-
+    // 명함 등록 및 업데이트
     @PostMapping("/reg")
     public ResponseEntity register(
             @RequestBody NamecardDto.Register dto,
             @AuthenticationPrincipal AuthUserDetails user){
         namecardService.reg(dto, user);
         return ResponseEntity.ok(BaseResponse.success("성공"));
+    }
+    // 명함 갯수 구하기
+    @GetMapping("/amount")
+    public ResponseEntity amount(){
+        Long res = namecardService.amount();
+        return ResponseEntity.ok(BaseResponse.success(res));
     }
 }

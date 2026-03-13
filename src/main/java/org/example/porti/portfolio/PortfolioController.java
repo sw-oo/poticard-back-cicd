@@ -6,6 +6,7 @@ import org.example.porti.common.model.BaseResponseStatus;
 import org.example.porti.portfolio.model.PortfolioDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,10 +19,12 @@ public class PortfolioController {
     private final PortfolioService portfolioService;
 
     // 포트폴리오 생성
-    @PostMapping("/create")
-    public ResponseEntity create(@RequestBody PortfolioDto.Req dto) {
-        Long newIdx = portfolioService.create(dto);
+    @PostMapping(value = "/create", consumes = {"multipart/form-data"})
+    public ResponseEntity create(
+            @RequestPart("data") PortfolioDto.Req dto,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
 
+        Long newIdx = portfolioService.create(dto, image);
         return ResponseEntity.ok(BaseResponse.success(newIdx));
     }
 
@@ -53,6 +56,7 @@ public class PortfolioController {
         return ResponseEntity.ok(BaseResponse.success("키워드가 저장되었습니다."));
     }
 
+    // 포트폴리오 스타일 저장
     @PatchMapping("/{idx}/style")
     public ResponseEntity updateStyle(@PathVariable Long idx, @RequestBody PortfolioDto.Req dto) {
         portfolioService.updateStyle(idx, dto);

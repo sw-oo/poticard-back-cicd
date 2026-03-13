@@ -7,29 +7,41 @@ import org.example.porti.portfolio.model.PortfolioDto;
 import org.example.porti.section.SectionRepository;
 import org.example.porti.section.model.Section;
 import org.example.porti.section.model.SectionDto;
+import org.example.porti.upload.CloudUploadService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PortfolioService {
     private final PortfolioRepository portfolioRepository;
     private final SectionRepository sectionRepository;
+    private final CloudUploadService cloudUploadService;
 
     @Transactional
-    public Long create(PortfolioDto.Req dto) {
-        Portfolio portfolio = dto.toEntity();
+    public Long create(PortfolioDto.Req dto, MultipartFile image) {
+        String ImageUrl = null;
 
+        try {
+            ImageUrl = cloudUploadService.saveFile(image);
+        } catch (Exception e) {
+            throw new RuntimeException("이미지 저장에 실패했습니다.", e);
+        }
+
+        Portfolio portfolio = dto.toEntity(ImageUrl);
+
+        if (portfolio.getSectionList() == null) {
+            portfolio.setSectionList(new ArrayList<>());
+        }
         if (dto.getSectionList() != null) {
             for (SectionDto.Req sectionReq : dto.getSectionList()) {
                 Section section = sectionReq.toEntity();
-
                 section.setPortfolio(portfolio);
                 portfolio.getSectionList().add(section);
             }
@@ -37,6 +49,7 @@ public class PortfolioService {
         Portfolio savedPortfolio = portfolioRepository.save(portfolio);
         return savedPortfolio.getIdx();
     }
+
     @Transactional(readOnly = true)
     public PortfolioDto.Res read(Long idx) {
         Portfolio portfolio = portfolioRepository.findById(idx)

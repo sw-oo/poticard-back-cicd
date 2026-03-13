@@ -1,7 +1,6 @@
 package org.example.porti.user;
 
 
-import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import org.example.porti.common.model.BaseResponse;
 import org.example.porti.common.model.BaseResponseStatus;
 import org.example.porti.user.model.AuthUserDetails;
@@ -16,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @CrossOrigin
 @RequestMapping("/user")
 @RestController
@@ -26,15 +27,21 @@ public class UserController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/signup")
-    public ResponseEntity signup(@RequestBody UserDto.SignupReq dto) {
-        UserDto.SignupRes result =  userService.signup(dto);
+    public ResponseEntity signup(@RequestBody UserDto.SignupReq dto, @RequestParam("type") String type) {
+        if (type.equals("personal")) {
+            UserDto.SignupRes result =  userService.signup(dto);
+            return ResponseEntity.ok(BaseResponse.success(result));
+        }
+        else{
+            UserDto.SignupRes result =  userService.companySignup(dto);
+            return ResponseEntity.ok(BaseResponse.success(result));
+        }
 
-        return ResponseEntity.ok(BaseResponse.success(result));
     }
 
-    @PostMapping("/signup/enterprise")
-    public ResponseEntity enterpriseSignup(@RequestBody UserDto.SignupReq dto) {
-        UserDto.SignupRes result =  userService.enterpriseSignup(dto);
+    @PostMapping("/signup/company")
+    public ResponseEntity companySignup(@RequestBody UserDto.SignupReq dto) {
+        UserDto.SignupRes result =  userService.companySignup(dto);
 
         return ResponseEntity.ok(BaseResponse.success(result));
     }
@@ -50,7 +57,9 @@ public class UserController {
 
         if(user != null) {
             String jwt = jwtUtil.createToken(user.getIdx(), user.getUsername(), user.getRole(), user.getNickname());
-            return ResponseEntity.ok().header("Set-Cookie", "ATOKEN=" + jwt + "; Path=/").body(BaseResponse.success("성공"));
+            Long expire = 60000000000L;
+            String cookie = String.format("ATOKEN=%s; HttpOnly; Secure; Domain=localhost; Path=/; Max-Age=%s",jwt,expire);
+            return ResponseEntity.ok().header("Set-Cookie", cookie).body(BaseResponse.success("성공"));
         }
 
         return ResponseEntity.ok(BaseResponse.fail(BaseResponseStatus.LOGIN_INVALID_USERINFO));
@@ -60,6 +69,13 @@ public class UserController {
     public ResponseEntity editNonEssential(@RequestBody UserDto.EditNonEssentialReq dto, @AuthenticationPrincipal AuthUserDetails user) {
         userService.editNonEssential(dto,user);
         return ResponseEntity.ok(BaseResponse.success(BaseResponseStatus.SUCCESS));
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity verify(@RequestParam String uuid) {
+        userService.verify(uuid);
+        // 인증 성공하면 프론트로 리다이렉트
+        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).location(URI.create("http://localhost:5173")).build();
     }
 
 }

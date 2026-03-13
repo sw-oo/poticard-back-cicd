@@ -3,9 +3,6 @@ package org.example.porti.user.model;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-
-import javax.swing.text.html.parser.Entity;
 
 public class UserDto {
 
@@ -27,14 +24,14 @@ public class UserDto {
                     .build();
         }
 
-        public User toEnterpriseEntity() {
+        public User toCompanyEntity() {
             return User.builder()
                     .email(this.email)
                     .name(this.name)
                     .password(this.password)
                     .phone(this.phone)
                     .enable(true)
-                    .role("ROLE_ENTERPRISE")
+                    .role("ROLE_COMPANY")
                     .build();
         }
     }
@@ -46,12 +43,14 @@ public class UserDto {
         private Long idx;
         private String email;
         private String name;
+        private String role;
 
         public static SignupRes from(User entity) {
             return SignupRes.builder()
                     .idx(entity.getIdx())
                     .email(entity.getEmail())
                     .name(entity.getName())
+                    .role(entity.getRole())
                     .build();
         }
     }

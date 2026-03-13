@@ -1,12 +1,11 @@
 package org.example.porti.user;
 
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.porti.common.exception.BaseException;
-import org.example.porti.namecard.model.Namecard;
 import org.example.porti.user.model.AuthUserDetails;
+import org.example.porti.user.model.EmailVerify;
 import org.example.porti.user.model.User;
 import org.example.porti.user.model.UserDto;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +14,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
+
 import static org.example.porti.common.model.BaseResponseStatus.*;
 
 @RequiredArgsConstructor
@@ -23,6 +25,8 @@ import static org.example.porti.common.model.BaseResponseStatus.*;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
+    private final EmailVerifyRepository emailVerifyRepository;
 
     public UserDto.SignupRes signup(UserDto.SignupReq dto) {
 
@@ -36,6 +40,13 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         userRepository.save(user);
 
+        // 메일 전송
+        String uuid = UUID.randomUUID().toString();
+        emailService.sendWelcomeMail(uuid, dto.getEmail());
+
+        // 메일 전송 내역 저장
+        EmailVerify emailVerify = EmailVerify.builder().email(dto.getEmail()).uuid(uuid).build();
+        emailVerifyRepository.save(emailVerify);
 
         return UserDto.SignupRes.from(user);
     }
@@ -49,12 +60,12 @@ public class UserService implements UserDetailsService {
         return AuthUserDetails.from(user);
     }
 
-    public UserDto.SignupRes enterpriseSignup(UserDto.SignupReq dto) {
+    public UserDto.SignupRes companySignup(UserDto.SignupReq dto) {
         // 이메일 중복 확인
         if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
             throw BaseException.from(SIGNUP_DUPLICATE_EMAIL);
         }
-        User user = dto.toEnterpriseEntity();
+        User user = dto.toCompanyEntity();
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         userRepository.save(user);
         return UserDto.SignupRes.from(user);
@@ -69,4 +80,11 @@ public class UserService implements UserDetailsService {
 //        userRepository.save(update);
     }
 
+    public void verify(String uuid) {
+        EmailVerify emailVerify = emailVerifyRepository.findByUuid(uuid).orElseThrow(
+                ()->BaseException.from(SIGNUP_INVALID_UUID));
+        User user = userRepository.findByEmail(emailVerify.getEmail()).orElseThrow();
+        user.setEnable(true);
+        userRepository.save(user);
+    }
 }

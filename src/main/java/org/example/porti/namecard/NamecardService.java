@@ -59,4 +59,8 @@ public class NamecardService {
         Namecard result = namecardRepository.findByUserIdx(userId).orElseThrow();
         return NamecardDto.NamecardRes.toDto(result);
     }
+
+    public Long amount() {
+        return namecardRepository.count();
+    }
 }

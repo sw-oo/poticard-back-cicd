@@ -5,7 +5,10 @@ import nl.martijndwars.webpush.Notification;
 import nl.martijndwars.webpush.PushService;
 import nl.martijndwars.webpush.Subscription;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.example.porti.chat.chatmessage.model.ChatMessage;
+import org.example.porti.chat.chatroom.model.ChatRoom;
 import org.example.porti.notification.model.NotificationDto;
+import org.example.porti.user.model.User;
 import org.springframework.stereotype.Service;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -34,14 +37,14 @@ public class NotificationService {
     }
 
     // receiverIdx로 notification정보를 찾은 후 senderEmail, contents를 포함해서 푸시알림 전송
-    public void sendToUser(Long receiverIdx, Long senderIdx, String senderEmail, String contents) {
+    public void sendToUser(ChatRoom room, User sender, User receiver, ChatMessage msg) {
         // receiverIdx로 notification 정보 확인
-        notificationRepository.findAllByUserIdx(receiverIdx).forEach(entity -> {
+        notificationRepository.findAllByUserIdx(receiver.getIdx()).forEach(entity -> {
             try {
                 // subscription + payload(senderEmail + contents)를 notification객체에 담아서 푸시알림 전송
                 Subscription.Keys keys = new Subscription.Keys(entity.getP256dh(), entity.getAuth());
                 Subscription subscription = new Subscription(entity.getEndpoint(), keys);
-                Notification notification = new Notification(subscription, NotificationDto.Payload.builder().senderIdx(senderIdx).senderEmail(senderEmail).contents(contents).build().toString());
+                Notification notification = new Notification(subscription, NotificationDto.Payload.from(room, sender, msg).toString());
                 pushService.send(notification);
             } catch (Exception e) {
                 e.printStackTrace();

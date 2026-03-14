@@ -37,19 +37,25 @@ public class ChatRoomDto {
     @Builder
     public static class ListRes {
         private Long idx;
+        private Long opponentUserIdx;
         private String opponentUserName;
         private String opponentUserProfileImage;
         private String opponentUserCareer;
         private String lastContents;
+        private Date lastContentsTime;
+        private long unreadCount;
 
-        public static ListRes from(ChatRoom entity, Long currentUserIdx) {
+        public static ListRes from(ChatRoom entity, Long currentUserIdx, String lastMessage, Date lastTime, long unreadCount) {
             User opponent = entity.getOpponent(currentUserIdx);
             return ListRes.builder()
                     .idx(entity.getIdx())
+                    .opponentUserIdx(opponent.getIdx())
                     .opponentUserName(opponent.getName())
                     .opponentUserProfileImage(opponent.getProfileImage())
                     .opponentUserCareer(opponent.getCareer())
-                    .lastContents("test")
+                    .lastContents(lastMessage)
+                    .lastContentsTime(lastTime)
+                    .unreadCount(unreadCount)
                     .build();
         }
     }

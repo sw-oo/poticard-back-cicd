@@ -1,5 +1,6 @@
 package org.example.porti.chat.chatmessage;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.porti.chat.chatmessage.model.ChatMessage;
 import org.example.porti.chat.chatmessage.model.ChatMessageDto;
@@ -41,7 +42,7 @@ public class ChatMessageService {
 
         ChatMessage res = chatMessageRepository.save(chatMessage);
         if (!isReceiverSubscribed) {
-            notificationService.sendToUser(receiver.getIdx(), sender.getIdx(), sender.getEmail(), req.getContents());
+            notificationService.sendToUser(room, sender, receiver, res);
         }
         return ChatMessageDto.Res.from(res);
     }
@@ -57,6 +58,12 @@ public class ChatMessageService {
 
     public List<ChatMessageDto.Res> messages(Long roomIdx) {
         List<ChatMessage> messages = chatMessageRepository.findAllByChatRoomIdxOrderByCreatedAtAsc(roomIdx);
+
         return messages.stream().map(ChatMessageDto.Res::from).toList();
+    }
+
+    @Transactional
+    public void markMessagesAsRead(Long roomIdx, Long userIdx) {
+        chatMessageRepository.markAsReadByRoomIdxAndNotUserIdx(roomIdx, userIdx);
     }
 }

@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.example.porti.chat.chatroom.model.ChatRoom;
 import org.example.porti.common.model.BaseEntity;
 import org.example.porti.user.model.User;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter @Builder
@@ -28,7 +27,6 @@ public class ChatMessage extends BaseEntity {
     private User user;
 
     @Column(name = "is_read", nullable = false)
-    @ColumnDefault("0")
     private boolean isRead;
 
     public void read() {

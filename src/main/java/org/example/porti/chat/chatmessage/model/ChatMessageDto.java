@@ -42,6 +42,7 @@ public class ChatMessageDto {
                     .senderIdx(entity.getUser().getIdx())
                     .senderName(entity.getUser().getName())
                     .contents(entity.getContents())
+                    .isRead(entity.isRead())
                     .createdAt(entity.getCreatedAt())
                     .updatedAt(entity.getUpdatedAt())
                     .build();

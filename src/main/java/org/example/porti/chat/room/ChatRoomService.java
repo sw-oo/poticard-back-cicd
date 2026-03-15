@@ -1,10 +1,10 @@
-package org.example.porti.chat.chatroom;
+package org.example.porti.chat.room;
 
 import lombok.RequiredArgsConstructor;
-import org.example.porti.chat.chatmessage.ChatMessageRepository;
-import org.example.porti.chat.chatmessage.model.ChatMessage;
-import org.example.porti.chat.chatroom.model.ChatRoom;
-import org.example.porti.chat.chatroom.model.ChatRoomDto;
+import org.example.porti.chat.message.ChatMessageRepository;
+import org.example.porti.chat.message.model.ChatMessage;
+import org.example.porti.chat.room.model.ChatRoom;
+import org.example.porti.chat.room.model.ChatRoomDto;
 import org.example.porti.user.UserRepository;
 import org.example.porti.user.model.User;
 import org.springframework.messaging.MessageDeliveryException;

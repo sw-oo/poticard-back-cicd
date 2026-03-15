@@ -1,4 +1,4 @@
-package org.example.porti.chat.chatroom.model;
+package org.example.porti.chat.room.model;
 
 import lombok.Builder;
 import lombok.Getter;

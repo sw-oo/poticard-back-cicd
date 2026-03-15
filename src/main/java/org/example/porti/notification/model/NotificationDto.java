@@ -2,8 +2,8 @@ package org.example.porti.notification.model;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.example.porti.chat.chatmessage.model.ChatMessage;
-import org.example.porti.chat.chatroom.model.ChatRoom;
+import org.example.porti.chat.message.model.ChatMessage;
+import org.example.porti.chat.room.model.ChatRoom;
 import org.example.porti.user.model.User;
 
 import java.util.Date;

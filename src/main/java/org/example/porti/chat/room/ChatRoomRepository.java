@@ -1,6 +1,6 @@
-package org.example.porti.chat.chatroom;
+package org.example.porti.chat.room;
 
-import org.example.porti.chat.chatroom.model.ChatRoom;
+import org.example.porti.chat.room.model.ChatRoom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,9 +1,10 @@
-package org.example.porti.chat.chatroom;
+package org.example.porti.chat.room;
 
 import lombok.RequiredArgsConstructor;
-import org.example.porti.chat.chatmessage.ChatMessageService;
-import org.example.porti.chat.chatmessage.model.ChatMessageDto;
-import org.example.porti.chat.chatroom.model.ChatRoomDto;
+import org.example.porti.chat.message.ChatMessageService;
+import org.example.porti.chat.message.model.ChatMessageDto;
+import org.example.porti.chat.message.model.ContentsType;
+import org.example.porti.chat.room.model.ChatRoomDto;
 import org.example.porti.common.model.BaseResponse;
 import org.example.porti.user.model.AuthUserDetails;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -47,4 +49,17 @@ public class ChatRoomController {
     public Map<String, Object> webRtc(Map<String, Object> message) {
         return message;
     }
+
+    @PostMapping("/{roomIdx}/upload/{type}")
+    public ResponseEntity uploadFiles(
+            @PathVariable Long roomIdx,
+            @PathVariable String type,
+            @RequestPart List<MultipartFile> files,
+            @AuthenticationPrincipal AuthUserDetails user) {
+
+        ContentsType contentsType = ContentsType.valueOf(type.toUpperCase());
+        ChatMessageDto.Res result = chatMessageService.uploadFiles(files, roomIdx, user.getIdx(), contentsType);
+        return ResponseEntity.ok(BaseResponse.success(result));
+    }
+
 }

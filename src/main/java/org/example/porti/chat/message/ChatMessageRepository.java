@@ -1,6 +1,6 @@
-package org.example.porti.chat.chatmessage;
+package org.example.porti.chat.message;
 
-import org.example.porti.chat.chatmessage.model.ChatMessage;
+import org.example.porti.chat.message.model.ChatMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +13,7 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> 
     List<ChatMessage> findAllByChatRoomIdxOrderByCreatedAtAsc(Long roomIdx);
 
     long countByChatRoomIdxAndUserIdxNotAndIsReadFalse(Long roomIdx, Long userIdx);
+
     Optional<ChatMessage> findFirstByChatRoomIdxOrderByCreatedAtDesc(Long roomIdx);
 
     @Modifying(clearAutomatically = true)

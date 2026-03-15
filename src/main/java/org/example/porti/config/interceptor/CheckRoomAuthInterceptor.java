@@ -2,7 +2,7 @@ package org.example.porti.config.interceptor;
 
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
-import org.example.porti.chat.chatroom.ChatRoomService;
+import org.example.porti.chat.room.ChatRoomService;
 import org.example.porti.user.model.AuthUserDetails;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;

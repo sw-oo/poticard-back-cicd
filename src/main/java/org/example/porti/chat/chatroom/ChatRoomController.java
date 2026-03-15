@@ -7,10 +7,13 @@ import org.example.porti.chat.chatroom.model.ChatRoomDto;
 import org.example.porti.common.model.BaseResponse;
 import org.example.porti.user.model.AuthUserDetails;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,5 +40,11 @@ public class ChatRoomController {
         chatMessageService.sendReadReceipt(roomIdx);
         List<ChatMessageDto.Res> messages = chatMessageService.messages(roomIdx);
         return ResponseEntity.ok(BaseResponse.success(messages));
+    }
+
+    @MessageMapping("/{roomIdx}/webrtc")
+    @SendTo("/sub/webrtc")
+    public Map<String, Object> webRtc(Map<String, Object> message) {
+        return message;
     }
 }

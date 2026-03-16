@@ -62,4 +62,12 @@ public class PortfolioController {
         portfolioService.updateStyle(idx, dto);
         return ResponseEntity.ok(BaseResponse.success("스타일 설정이 저장되었습니다."));
     }
+
+    // 포트폴리오 ai 첨삭
+    @PostMapping("/ai-review")
+    public ResponseEntity aiReview(@RequestBody Map<String, String> request) {
+        String contents = request.get("contents");
+        String aiResult = portfolioService.getAiReview(contents);
+        return ResponseEntity.ok(BaseResponse.success(aiResult));
+    }
 }

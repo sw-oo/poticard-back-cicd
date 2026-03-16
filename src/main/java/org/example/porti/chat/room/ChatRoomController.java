@@ -36,6 +36,13 @@ public class ChatRoomController {
         return ResponseEntity.ok().body(BaseResponse.success(chatRoomList));
     }
 
+    @GetMapping("/test/list")
+    public ResponseEntity testList(@RequestParam(name = "testUserIdx") Long testUserIdx) {
+        // @AuthenticationPrincipal을 통하지 않고, 파라미터로 받은 idx를 직접 서비스에 전달
+        List<ChatRoomDto.ListRes> chatRoomList = chatRoomService.list(testUserIdx);
+        return ResponseEntity.ok().body(BaseResponse.success(chatRoomList));
+    }
+
     @GetMapping("/{roomIdx}/messages")
     public ResponseEntity getMessages(@PathVariable Long roomIdx, @AuthenticationPrincipal AuthUserDetails currentUser) {
         chatMessageService.markMessagesAsRead(roomIdx, currentUser.getIdx());

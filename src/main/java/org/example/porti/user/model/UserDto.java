@@ -4,6 +4,11 @@ package org.example.porti.user.model;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Map;
+
+import static org.example.porti.common.Constants.DEFAULT_COMPANY_ROLE;
+import static org.example.porti.common.Constants.DEFAULT_USER_ROLE;
+
 public class UserDto {
 
     @Getter
@@ -20,7 +25,7 @@ public class UserDto {
                     .password(this.password)
                     .phone(this.phone)
                     .enable(false)
-                    .role("ROLE_USER")
+                    .role(DEFAULT_USER_ROLE)
                     .build();
         }
 
@@ -31,7 +36,7 @@ public class UserDto {
                     .password(this.password)
                     .phone(this.phone)
                     .enable(true)
-                    .role("ROLE_COMPANY")
+                    .role(DEFAULT_COMPANY_ROLE)
                     .build();
         }
     }
@@ -90,4 +95,52 @@ public class UserDto {
         private String profile_image;
     }
 
+    @Getter
+    @Builder
+    public static class OAuth {
+        private String email;
+        private String name;
+        private String provider;
+        private String phone;
+        private boolean enable;
+        private String role;
+
+        public static OAuth from(Map<String, Object> attributes, String provider) {
+            String providerId = null;
+            String email = null;
+            Map properties = null;
+            String name = null;
+            String phone = null;
+
+            if (provider.equals("kakao")){
+                providerId = ((Long) attributes.get("id")).toString();
+                email = providerId + "@kakao.social";
+                properties = (Map) attributes.get("properties");
+                name = (String) properties.get("nickname");
+                phone = (String) properties.get("phone");
+            } else if (provider.equals("google")){
+                email = (String) attributes.get("email");
+                name = (String) attributes.get("name");
+                phone = (String) attributes.get("phone");
+            }
+            return OAuth.builder()
+                    .email(email)
+                    .name(name)
+                    .provider(provider)
+                    .phone(phone)
+                    .enable(true)
+                    .role(DEFAULT_USER_ROLE)
+                    .build();
+        }
+
+        public User toEntity() {
+            return User.builder()
+                    .email(this.email)
+                    .name(this.name)
+                    .phone(this.phone)
+                    .enable(this.enable)
+                    .role(this.role)
+                    .build();
+        }
+    }
 }

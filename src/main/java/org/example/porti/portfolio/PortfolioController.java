@@ -2,7 +2,6 @@ package org.example.porti.portfolio;
 
 import lombok.RequiredArgsConstructor;
 import org.example.porti.common.model.BaseResponse;
-import org.example.porti.common.model.BaseResponseStatus;
 import org.example.porti.portfolio.model.PortfolioDto;
 import org.example.porti.user.model.AuthUserDetails;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PortfolioController {
     private final PortfolioService portfolioService;
+    private final AiService aiService;
 
     // 포트폴리오 생성
     @PostMapping(value = "/create", consumes = {"multipart/form-data"})
@@ -72,7 +72,15 @@ public class PortfolioController {
     @PostMapping("/ai-review")
     public ResponseEntity aiReview(@RequestBody Map<String, String> request) {
         String contents = request.get("contents");
-        String aiResult = portfolioService.getAiReview(contents);
+        String aiResult = aiService.getAiReview(contents);
         return ResponseEntity.ok(BaseResponse.success(aiResult));
+    }
+
+    // 포트폴리오 ai 키워드 추출
+    @PostMapping("/ai-keywords")
+    public ResponseEntity aiKeywords(@RequestBody Map<String, String> request) {
+        String contents = request.get("contents");
+        List<String> keywords = aiService.getAiKeywords(contents);
+        return ResponseEntity.ok(BaseResponse.success(keywords));
     }
 }

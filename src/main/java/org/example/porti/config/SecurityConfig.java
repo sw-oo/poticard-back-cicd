@@ -1,6 +1,5 @@
 package org.example.porti.config;
 
-import io.netty.handler.codec.http.HttpMethod;
 import org.example.porti.config.filter.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.example.porti.config.oauth2.OAuth2AuthenticationSuccessHandler;
@@ -53,7 +52,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(
                 (auth) -> auth
-                        .requestMatchers("/user/login", "/user/signup", "/user/verify").permitAll()
+                        .requestMatchers("/user/login", "/user/signup", "/user/verify", "/chat/room/test/**").permitAll()
                         .requestMatchers("/board/reg").authenticated()
 //                        .anyRequest().authenticated()
                         .anyRequest().permitAll()

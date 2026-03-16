@@ -11,7 +11,8 @@ public class DummyDataInserter {
 
     // 1. DB 접속 정보 세팅 (본인의 DB 환경에 맞게 수정하세요)
     // 팁: MySQL의 경우 rewriteBatchedStatements=true 옵션을 넣으면 Insert 속도가 비약적으로 상승합니다.
-    private static final String DB_URL = "jdbc:mariadb://10.10.10.30:3306/test";
+    // private static final String DB_URL = "jdbc:mariadb://10.10.10.30:3306/test";
+    private static final String DB_URL = "jdbc:mariadb://192.100.5.102:3306/poticard";
     private static final String DB_USER = "root"; // 예: root
     private static final String DB_PASSWORD = "qwer1234"; // 예: 1234
 

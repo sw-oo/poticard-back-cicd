@@ -35,23 +35,25 @@ public class ChatRoomController {
 
     @GetMapping("/list")
     public ResponseEntity list(
-            @AuthenticationPrincipal AuthUserDetails currentUser) {
-        List<ChatRoomDto.ListRes> chatRoomList = chatRoomService.list(currentUser.getIdx());
-        return ResponseEntity.ok().body(BaseResponse.success(chatRoomList));
+            @AuthenticationPrincipal AuthUserDetails currentUser,
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Slice<ChatRoomDto.ListRes> responses = chatRoomService.list(currentUser.getIdx(), pageable);
+        return ResponseEntity.ok(BaseResponse.success(responses));
     }
 
     @GetMapping("/test/list")
-    public ResponseEntity testList(@RequestParam(name = "testUserIdx") Long testUserIdx) {
-        // @AuthenticationPrincipal을 통하지 않고, 파라미터로 받은 idx를 직접 서비스에 전달
-        List<ChatRoomDto.ListRes> chatRoomList = chatRoomService.list(testUserIdx);
-        return ResponseEntity.ok().body(BaseResponse.success(chatRoomList));
+    public ResponseEntity testList(
+            @RequestParam(name = "testUserIdx") Long testUserIdx,
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Slice<ChatRoomDto.ListRes> responses = chatRoomService.list(testUserIdx, pageable);
+        return ResponseEntity.ok(BaseResponse.success(responses));
     }
 
     @GetMapping("/{roomIdx}/messages")
     public ResponseEntity getMessages(
             @PathVariable Long roomIdx,
             @AuthenticationPrincipal AuthUserDetails currentUser,
-            @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
         chatMessageService.markMessagesAsRead(roomIdx, currentUser.getIdx());
         chatMessageService.sendReadReceipt(roomIdx);
@@ -64,7 +66,7 @@ public class ChatRoomController {
     public ResponseEntity getMessages(
             @PathVariable Long roomIdx,
             @RequestParam Long testUserIdx,
-            @PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
         chatMessageService.markMessagesAsRead(roomIdx, testUserIdx);
         chatMessageService.sendReadReceipt(roomIdx);

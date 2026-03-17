@@ -7,10 +7,12 @@ import org.example.porti.chat.room.model.ChatRoom;
 import org.example.porti.chat.room.model.ChatRoomDto;
 import org.example.porti.user.UserRepository;
 import org.example.porti.user.model.User;
+import org.springframework.data.domain.Slice;
 import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.print.Pageable;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -34,19 +36,19 @@ public class ChatRoomService {
         return ChatRoomDto.CreateRes.from(chatRoomRepository.save(chatRoom));
     }
 
-    public List<ChatRoomDto.ListRes> list(Long idx) {
-        List<ChatRoom> chatRoomList = chatRoomRepository.findAllByHostUserIdxOrGuestUserIdx(idx, idx);
+    @Transactional(readOnly = true)
+    public Slice<ChatRoomDto.ListRes> list(Long userIdx, Pageable pageable) {
+        Slice<ChatRoom> chatRoomSlice = chatRoomRepository.findAllByHostUserIdxOrGuestUserIdx(userIdx, userIdx, pageable);
 
-        return chatRoomList.stream().map(room -> {
+        return chatRoomSlice.map(room -> {
             Optional<ChatMessage> lastContents = chatMessageRepository.findFirstByChatRoomIdxOrderByCreatedAtDesc(room.getIdx());
 
             String lastMessage = lastContents.map(ChatMessage::getContents).orElse("채팅을 시작하세요");
-            Date lastTime = lastContents.map(ChatMessage::getCreatedAt).orElse(null); // 메시지 없으면 null
+            Date lastTime = lastContents.map(ChatMessage::getCreatedAt).orElse(null);
 
-            long unreadCount = chatMessageRepository.countByChatRoomIdxAndUserIdxNotAndIsReadFalse(room.getIdx(), idx);
-
-            return ChatRoomDto.ListRes.from(room, idx, lastMessage, lastTime, unreadCount);
-        }).toList();
+            long unreadCount = chatMessageRepository.countByChatRoomIdxAndUserIdxNotAndIsReadFalse(room.getIdx(), userIdx);
+            return ChatRoomDto.ListRes.from(room, userIdx, lastMessage, lastTime, unreadCount);
+        });
     }
 
     @Transactional(readOnly = true)

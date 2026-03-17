@@ -51,6 +51,19 @@ public class ChatRoomController {
         return ResponseEntity.ok(BaseResponse.success(messages));
     }
 
+    @GetMapping("/{roomIdx}/messages/test") // 뒤에 /test를 붙였습니다.
+    public ResponseEntity getMessagesTest(
+            @PathVariable Long roomIdx,
+            @RequestParam Long testUserIdx) { // 인증 대신 파라미터로 받음
+
+        // 기존 로직과 동일하게 수행
+        chatMessageService.markMessagesAsRead(roomIdx, testUserIdx);
+        chatMessageService.sendReadReceipt(roomIdx);
+        List<ChatMessageDto.Res> messages = chatMessageService.messages(roomIdx);
+
+        return ResponseEntity.ok(BaseResponse.success(messages));
+    }
+
     @MessageMapping("/{roomIdx}/webrtc")
     @SendTo("/sub/webrtc")
     public Map<String, Object> webRtc(Map<String, Object> message) {

@@ -103,4 +103,15 @@ public class PortfolioService {
 
         portfolioRepository.delete(portfolio);
     }
+
+    @Transactional(readOnly = true)
+    public List<String> getAllKeywords(AuthUserDetails authUser) {
+        List<Portfolio> portfolioList = portfolioRepository.findAllByUserIdx(authUser.getIdx());
+
+        return portfolioList.stream()
+                .filter(p -> p.getKeywords() != null)
+                .flatMap(p -> p.getKeywords().stream())
+                .distinct()
+                .toList();
+    }
 }

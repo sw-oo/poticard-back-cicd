@@ -62,6 +62,13 @@ public class PortfolioController {
         return ResponseEntity.ok(BaseResponse.success("키워드가 저장되었습니다."));
     }
 
+    // 모든 포트폴리오에 저장된 키워드 호출
+    @GetMapping("/keywords")
+    public ResponseEntity getAllKeywords(@AuthenticationPrincipal AuthUserDetails user) {
+        List<String> keywords = portfolioService.getAllKeywords(user);
+        return ResponseEntity.ok(BaseResponse.success(keywords));
+    }
+
     // 포트폴리오 스타일 저장
     @PatchMapping("/{idx}/style")
     public ResponseEntity updateStyle(@PathVariable Long idx, @RequestBody PortfolioDto.Req dto) {

@@ -2,6 +2,7 @@ package org.example.porti.orders.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.porti.user.model.User;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
@@ -25,4 +26,8 @@ public class Orders {
     private String merchantUid;
     private String planCode;
     private String email;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_idx")
+    private User user;
 }

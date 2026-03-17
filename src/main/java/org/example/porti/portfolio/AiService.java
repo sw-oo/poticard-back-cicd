@@ -3,6 +3,8 @@ package org.example.porti.portfolio;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.example.porti.orders.OrdersRepository;
+import org.example.porti.orders.model.Orders;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,12 +21,20 @@ public class AiService {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final OrdersRepository ordersRepository;
 
     @Value("${gemini.api.key}")
     private String geminiApiKey;
 
     // AI 첨삭
-    public String getAiReview(String originalContent) {
+    public String getAiReview(Long userIdx, String originalContent) {
+        Orders latestOrder = ordersRepository.findFirstByUserIdxAndPaidTrueOrderByIdxDesc(userIdx)
+                .orElseThrow(() -> new RuntimeException("결제 내역이 없습니다. PRO 요금제를 이용해 주세요."));
+
+        if (latestOrder.getPlanCode() == null || !latestOrder.getPlanCode().equalsIgnoreCase("PRO")) {
+            throw new RuntimeException("AI 첨삭 기능은 PRO 요금제 사용자만 이용할 수 있습니다.");
+        }
+
         if (originalContent == null || originalContent.trim().isEmpty()) {
             throw new RuntimeException("첨삭할 내용이 비어 있습니다.");
         }

@@ -71,10 +71,17 @@ public class PortfolioController {
 
     // 포트폴리오 ai 첨삭
     @PostMapping("/ai-review")
-    public ResponseEntity aiReview(@RequestBody Map<String, String> request) {
-        String contents = request.get("contents");
-        String aiResult = aiService.getAiReview(contents);
-        return ResponseEntity.ok(BaseResponse.success(aiResult));
+    public ResponseEntity aiReview(
+            @AuthenticationPrincipal AuthUserDetails user, // ✨ 유저 정보 받기
+            @RequestBody Map<String, String> request) {
+        try {
+            String contents = request.get("contents");
+            String aiResult = aiService.getAiReview(user.getIdx(), contents); // ✨ userIdx 전달
+            return ResponseEntity.ok(BaseResponse.success(aiResult));
+        } catch (RuntimeException e) {
+            // PRO 유저가 아니거나 오류 발생 시 실패 메시지 반환
+            return ResponseEntity.ok(BaseResponse.fail(BaseResponseStatus.FAIL, e.getMessage()));
+        }
     }
 
     // 포트폴리오 ai 키워드 추출

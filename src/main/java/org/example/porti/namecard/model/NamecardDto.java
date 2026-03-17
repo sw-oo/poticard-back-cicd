@@ -30,6 +30,7 @@ public class NamecardDto {
         private String affiliation;
         private String name;
         private String profileImage;
+        private String description;
         private String career;
         private String url;
         private String address;
@@ -43,6 +44,7 @@ public class NamecardDto {
                     .color(entity.getColor())
                     .title(entity.getTitle())
                     .layout(entity.getLayout())
+                    .description(entity.getDescription())
                     .affiliation(entity.getUser().getAffiliation())
                     .name(entity.getUser().getName())
                     .profileImage(entity.getUser().getProfileImage())
@@ -63,6 +65,7 @@ public class NamecardDto {
         private String layout;
         private String color;
         private String url;
+        private String description;
         private List<String> keywords;
 
         public Namecard toEntity(){
@@ -71,6 +74,7 @@ public class NamecardDto {
                     .layout(this.layout)
                     .color(this.color)
                     .url(this.url)
+                    .description(this.description)
                     .keywords(this.keywords)
                     .build();
         }

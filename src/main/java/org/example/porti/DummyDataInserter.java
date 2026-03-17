@@ -12,7 +12,7 @@ public class DummyDataInserter {
     // 1. DB 접속 정보 세팅 (본인의 DB 환경에 맞게 수정하세요)
     // 팁: MySQL의 경우 rewriteBatchedStatements=true 옵션을 넣으면 Insert 속도가 비약적으로 상승합니다.
     // private static final String DB_URL = "jdbc:mariadb://10.10.10.30:3306/test";
-    private static final String DB_URL = "jdbc:mariadb://192.100.5.102:3306/poticard";
+    private static final String DB_URL = "jdbc:mariadb://10.10.10.30:3306/test";
     private static final String DB_USER = "root"; // 예: root
     private static final String DB_PASSWORD = "qwer1234"; // 예: 1234
 
@@ -25,8 +25,8 @@ public class DummyDataInserter {
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         // Namecard 테이블
-        String insertNamecardSql = "INSERT INTO namecard (title, layout, color, url, keywords, created_at, updated_at, user_idx) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String insertNamecardSql = "INSERT INTO namecard (title, layout, color, url, keywords, created_at, updated_at, user_idx, description) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              PreparedStatement userStmt = conn.prepareStatement(insertUserSql, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -72,7 +72,8 @@ public class DummyDataInserter {
                 namecardStmt.setString(5, "[\"Java\",\"Spring\",\"Backend\"]");
                 namecardStmt.setTimestamp(6, now); // created_at
                 namecardStmt.setTimestamp(7, now); // updated_at
-                namecardStmt.setLong(8, i); // user_idx
+                namecardStmt.setLong(8, i);// user_idx
+                namecardStmt.setString(9, "로비바보");
 
 
                 namecardStmt.addBatch(); // Namecard 배치에 추가

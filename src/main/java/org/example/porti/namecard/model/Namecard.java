@@ -28,6 +28,7 @@ public class Namecard {
     private String layout;
     private String color;
     private String url;
+    private String description;
 
     @JdbcTypeCode(SqlTypes.JSON)
     private List<String> keywords;
@@ -57,6 +58,9 @@ public class Namecard {
         }
         if (StringUtils.hasText(dto.getUrl())) {
             this.url = dto.getUrl();
+        }
+        if (StringUtils.hasText(dto.getDescription())) {
+            this.description = dto.getDescription();
         }
         if (dto.getKeywords() != null && !dto.getKeywords().isEmpty()) {
             this.keywords = dto.getKeywords();

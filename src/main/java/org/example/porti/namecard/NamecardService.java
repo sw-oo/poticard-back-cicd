@@ -55,9 +55,13 @@ public class NamecardService {
                 );
     }
 
+    @Transactional(readOnly = true)
     public NamecardDto.NamecardRes singleUser(Long userId) {
-        Namecard result = namecardRepository.findByUserIdx(userId).orElseThrow();
-        return NamecardDto.NamecardRes.toDto(result);
+        Optional<Namecard> result = namecardRepository.findByUserIdx(userId);
+        if (result.isEmpty()) {
+            return null;
+        }
+        return NamecardDto.NamecardRes.toDto(result.get());
     }
 
     public Long amount() {

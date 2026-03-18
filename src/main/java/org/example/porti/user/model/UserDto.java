@@ -3,6 +3,7 @@ package org.example.porti.user.model;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.Map;
 
@@ -73,11 +74,11 @@ public class UserDto {
         private String email;
         private String name;
 
-        public static LoginRes from(User entity) {
+        public static LoginRes from(AuthUserDetails entity) {
             return LoginRes.builder()
                     .idx(entity.getIdx())
-                    .email(entity.getEmail())
-                    .name(entity.getName())
+                    .email(entity.getUsername())
+                    .name(entity.getNickname())
                     .build();
         }
     }

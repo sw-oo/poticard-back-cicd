@@ -1,6 +1,7 @@
 package org.example.porti.user.model;
 
 
+import io.portone.sdk.server.common.Country;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -9,6 +10,7 @@ import java.util.Map;
 
 import static org.example.porti.common.Constants.DEFAULT_COMPANY_ROLE;
 import static org.example.porti.common.Constants.DEFAULT_USER_ROLE;
+import static org.example.porti.common.Constants.DEFAULT_PROFILE_IMAGE;
 
 public class UserDto {
 
@@ -27,6 +29,7 @@ public class UserDto {
                     .phone(this.phone)
                     .enable(false)
                     .role(DEFAULT_USER_ROLE)
+                    .profileImage(DEFAULT_PROFILE_IMAGE+this.name)
                     .build();
         }
 
@@ -144,4 +147,26 @@ public class UserDto {
                     .build();
         }
     }
+
+    @Builder
+    @Getter
+    public static class MyInfo {
+        private Long idx;
+        private String email;
+        private String name;
+        private String role;
+        private String affilliation;
+        private String career;
+        public static MyInfo from(User entity) {
+            return MyInfo.builder()
+                    .idx(entity.getIdx())
+                    .email(entity.getEmail())
+                    .name(entity.getName())
+                    .role(entity.getRole())
+                    .affilliation(entity.getAffiliation())
+                    .career(entity.getCareer())
+                    .build();
+        }
+    }
+
 }

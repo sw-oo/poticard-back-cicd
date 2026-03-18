@@ -77,4 +77,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).location(URI.create("http://localhost:5173")).build();
     }
 
+    @GetMapping("/me")
+    public ResponseEntity me(@AuthenticationPrincipal AuthUserDetails user) {
+        UserDto.MyInfo res = userService.me(user.getIdx());
+        return ResponseEntity.ok(BaseResponse.success(res));
+    }
 }

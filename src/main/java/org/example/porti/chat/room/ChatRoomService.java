@@ -22,11 +22,11 @@ public class ChatRoomService {
     private final ChatMessageRepository chatMessageRepository;
     private final UserRepository userRepository;
 
-    public ChatRoomDto.CreateRes save(Long hostUserIdx, Long guestUserIdx) {
+    public ChatRoomDto.CreateRes save(Long hostUserIdx, String guestUserEmail) {
         User hostUser = userRepository.findById(hostUserIdx).orElseThrow();
-        User guestUser = userRepository.findById(guestUserIdx).orElseThrow();
-        ChatRoom check1 = chatRoomRepository.findByHostUserIdxAndGuestUserIdx(hostUserIdx, guestUserIdx);
-        ChatRoom check2 = chatRoomRepository.findByHostUserIdxAndGuestUserIdx(guestUserIdx, hostUserIdx);
+        User guestUser = userRepository.findByEmail(guestUserEmail).orElseThrow();
+        ChatRoom check1 = chatRoomRepository.findByHostUserIdxAndGuestUserIdx(hostUserIdx, guestUser.getIdx());
+        ChatRoom check2 = chatRoomRepository.findByHostUserIdxAndGuestUserIdx(guestUser.getIdx(), hostUserIdx);
         if(check1 != null || check2 != null) {
             throw new RuntimeException("Room is already exists");
         }

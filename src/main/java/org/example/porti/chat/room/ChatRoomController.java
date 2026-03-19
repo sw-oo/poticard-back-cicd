@@ -24,9 +24,9 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
 
-    @PostMapping("/create/{guestUserIdx}")
-    public ResponseEntity create(@AuthenticationPrincipal AuthUserDetails hostUser, @PathVariable Long guestUserIdx) {
-        return ResponseEntity.ok(BaseResponse.success(chatRoomService.save(hostUser.getIdx(), guestUserIdx)));
+    @PostMapping("/create/{guestUserEmail}")
+    public ResponseEntity create(@AuthenticationPrincipal AuthUserDetails hostUser, @PathVariable String guestUserEmail) {
+        return ResponseEntity.ok(BaseResponse.success(chatRoomService.save(hostUser.getIdx(), guestUserEmail)));
     }
 
     @GetMapping("/list")

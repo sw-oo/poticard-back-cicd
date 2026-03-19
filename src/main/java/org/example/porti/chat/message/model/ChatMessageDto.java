@@ -10,20 +10,21 @@ import java.util.Date;
 import java.util.List;
 
 import static org.example.porti.chat.message.model.ContentsType.TEXT;
+import static org.example.porti.chat.message.model.ContentsType.USER_LEFT;
 
 public class ChatMessageDto {
     @Getter
     public static class Send {
+        private ContentsType type;
         private Long roomIdx;
         private String contents;
 
-        public ChatMessage toEntity(ChatRoom room, User user, ContentsType type, boolean isReceiverSubscribed) {
-            String finalContents = (type == TEXT) ? this.contents : "파일을 보냈습니다.";
+        public ChatMessage toEntity(ChatRoom room, User user, String contents, boolean isReceiverSubscribed) {
             return ChatMessage.builder()
                     .chatRoom(room)
                     .user(user)
-                    .contents(finalContents)
                     .contentsType(type)
+                    .contents(contents)
                     .isRead(isReceiverSubscribed)
                     .build();
 

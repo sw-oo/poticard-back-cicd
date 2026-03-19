@@ -33,6 +33,11 @@ public class ChatRoomController {
         return ResponseEntity.ok(BaseResponse.success(chatRoomService.save(hostUser.getIdx(), guestUserEmail)));
     }
 
+    @PatchMapping("/{roomIdx}/leave")
+    public ResponseEntity leave(@AuthenticationPrincipal AuthUserDetails currentUser, @PathVariable Long roomIdx) {
+        return ResponseEntity.ok(BaseResponse.success(chatRoomService.leave(currentUser.getIdx(), roomIdx)));
+    }
+
     @GetMapping("/list")
     public ResponseEntity list(
             @AuthenticationPrincipal AuthUserDetails currentUser,

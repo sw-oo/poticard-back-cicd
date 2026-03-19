@@ -47,11 +47,12 @@ public class ChatMessageService {
         ChatRoom room = chatRoomRepository.findById(req.getRoomIdx()).orElseThrow(() -> new MessageDeliveryException("Invalid ChatRoom"));
         User sender = userRepository.findById(senderIdx).orElseThrow(() -> new MessageDeliveryException("Invalid Sender"));
         User receiver = room.getOpponent(senderIdx);
+        String contents = req.getType().getTypeMsg(sender.getName(), req.getContents());
 
         String destination = "/sub/chat/room/" + req.getRoomIdx();
         boolean isReceiverSubscribed = isUserSubscribed(receiver.getEmail(), destination);
 
-        ChatMessage chatMessage = req.toEntity(room, sender, TEXT, isReceiverSubscribed);
+        ChatMessage chatMessage = req.toEntity(room, sender, contents, isReceiverSubscribed);
         ChatMessage res = chatMessageRepository.save(chatMessage);
 
         if (!isReceiverSubscribed) {
@@ -79,12 +80,14 @@ public class ChatMessageService {
         ChatRoom room = chatRoomRepository.findById(roomIdx).orElseThrow(() -> new MessageDeliveryException("Invalid ChatRoom"));
         User sender = userRepository.findById(senderIdx).orElseThrow(() -> new MessageDeliveryException("Invalid Sender"));
         User receiver = room.getOpponent(senderIdx);
+        String contents = contentsType.getTypeMsg(sender.getName());
+
 
         String destination = "/sub/chat/room/" + roomIdx;
         boolean isReceiverSubscribed = isUserSubscribed(receiver.getEmail(), destination);
 
         ChatMessageDto.Send sendDto = new ChatMessageDto.Send();
-        ChatMessage chatMessage = sendDto.toEntity(room, sender, contentsType, isReceiverSubscribed);
+        ChatMessage chatMessage = sendDto.toEntity(room, sender, contents, isReceiverSubscribed);
         ChatMessage res = chatMessageRepository.save(chatMessage);
 
         List<ChatAttachments> savedAttachments = new ArrayList<>();

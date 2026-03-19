@@ -93,6 +93,7 @@ public class PortfolioService {
             for (SectionDto.Req sReq : dto.getSectionList()) {
                 sectionRepository.findById(sReq.getIdx()).ifPresent(section -> {
                     section.setSectionOrder(sReq.getSectionOrder());
+                    section.setVisible(sReq.isVisible());
                 });
             }
         }

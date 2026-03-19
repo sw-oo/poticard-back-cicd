@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.example.porti.common.model.BaseResponseStatus.*;
@@ -90,5 +91,14 @@ public class UserService implements UserDetailsService {
 
     public UserDto.MyInfo me(Long idx) {
         return UserDto.MyInfo.from(userRepository.findById(idx).orElseThrow());
+    }
+
+    public Boolean exists(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if(user.isPresent()) {
+            return true;
+        }else {
+            return false;
+        }
     }
 }

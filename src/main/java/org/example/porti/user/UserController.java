@@ -82,4 +82,10 @@ public class UserController {
         UserDto.MyInfo res = userService.me(user.getIdx());
         return ResponseEntity.ok(BaseResponse.success(res));
     }
+
+    @GetMapping("/check-email")
+    public ResponseEntity checkEmail(@RequestParam String email) {
+        Boolean res = userService.exists(email);
+        return ResponseEntity.ok(BaseResponse.success(res));
+    }
 }

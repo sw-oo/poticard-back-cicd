@@ -11,4 +11,5 @@ import org.springframework.data.domain.Pageable;
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     Slice<ChatRoom> findAllByHostUserIdxOrGuestUserIdx(Long hostUserIdx, Long guestUserIdx, Pageable pageable);
     ChatRoom findByHostUserIdxAndGuestUserIdx(Long hostUserIdx, Long guestUserIdx);
+    void deleteChatRoomByIdx(Long roomIdx);
 }

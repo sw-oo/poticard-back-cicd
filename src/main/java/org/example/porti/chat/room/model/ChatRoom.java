@@ -1,10 +1,7 @@
 package org.example.porti.chat.room.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.example.porti.chat.attachment.model.ChatAttachments;
 import org.example.porti.chat.message.model.ChatMessage;
 import org.example.porti.common.model.BaseEntity;
@@ -28,10 +25,22 @@ public class ChatRoom extends BaseEntity {
     @JoinColumn(name = "guest_user_idx")
     private User guestUser;
 
-    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessage> messages;
 
     public User getOpponent(Long currentUserIdx) {
-        return this.hostUser.getIdx().equals(currentUserIdx) ? this.guestUser : this.hostUser;
+        if (this.hostUser != null && this.hostUser.getIdx().equals(currentUserIdx)) {
+            return this.guestUser;
+        }
+        // 내가 게스트라면 호스트를 반환 (호스트가 나갔으면 null 반환)
+        return this.hostUser;
+    }
+
+    public void removeHost() {
+        this.hostUser = null;
+    }
+
+    public void removeGuest() {
+        this.guestUser = null;
     }
 }

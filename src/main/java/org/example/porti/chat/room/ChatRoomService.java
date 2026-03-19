@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.data.domain.Pageable;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -33,6 +34,33 @@ public class ChatRoomService {
         }
         ChatRoom chatRoom = ChatRoomDto.toEntity(hostUser, guestUser);
         return ChatRoomDto.CreateRes.from(chatRoomRepository.save(chatRoom));
+    }
+
+    @Transactional
+    public ChatRoomDto.CreateRes leave(Long currentUserIdx, Long roomIdx) {
+        ChatRoom chatRoom = chatRoomRepository.findById(roomIdx)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방입니다."));
+
+        boolean isHost = chatRoom.getHostUser() != null && Objects.equals(currentUserIdx, chatRoom.getHostUser().getIdx());
+        boolean isGuest = chatRoom.getGuestUser() != null && Objects.equals(currentUserIdx, chatRoom.getGuestUser().getIdx());
+
+        if (isHost) {
+            chatRoom.removeHost();
+        } else if (isGuest) {
+            chatRoom.removeGuest();
+        } else {
+            throw new IllegalArgumentException("해당 채팅방의 참여자가 아닙니다.");
+        }
+
+        if (chatRoom.getHostUser() == null && chatRoom.getGuestUser() == null) {
+            chatRoomRepository.delete(chatRoom); // CascadeType.ALL에 의해 메시지도 삭제됨
+
+            return ChatRoomDto.CreateRes.builder()
+                    .idx(roomIdx)
+                    .message("모든 사용자가 퇴장하여 채팅방과 메시지가 삭제되었습니다.")
+                    .build();
+        }
+        return ChatRoomDto.CreateRes.from(chatRoom, "채팅방에서 나갔습니다.");
     }
 
     @Transactional(readOnly = true)

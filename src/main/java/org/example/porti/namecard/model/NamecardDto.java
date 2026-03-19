@@ -23,6 +23,7 @@ public class NamecardDto {
     @Builder
     public static class NamecardRes {
         private Long idx;
+        private Long userIdx;
         private String email;
         private String title;
         private String layout;
@@ -40,6 +41,7 @@ public class NamecardDto {
         public static NamecardRes toDto(Namecard entity){
             return NamecardRes.builder()
                     .idx(entity.getIdx())
+                    .userIdx(entity.getUser().getIdx())
                     .email(entity.getUser().getEmail())
                     .color(entity.getColor())
                     .title(entity.getTitle())

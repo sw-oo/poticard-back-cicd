@@ -47,6 +47,10 @@ public class Community extends BaseEntity {
     @ColumnDefault("0")
     private int commentCount;
 
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int viewCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_idx")
     private User user;
@@ -59,7 +63,7 @@ public class Community extends BaseEntity {
         this.category = dto.getCategory();
         this.title = dto.getTitle();
         this.contents = dto.getContents();
-        this.tags = dto.getTags();
+        this.tags = dto.normalizeTags();
         this.anonymous = dto.isAnonymous();
     }
 
@@ -81,6 +85,10 @@ public class Community extends BaseEntity {
         if (this.commentCount > 0) {
             this.commentCount = this.commentCount - 1;
         }
+    }
+
+    public void increaseViewCount() {
+        this.viewCount = this.viewCount + 1;
     }
 
     public void completeSolved() {

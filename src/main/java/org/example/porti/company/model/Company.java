@@ -9,6 +9,7 @@ import org.example.porti.common.model.BaseEntity;
 import org.example.porti.user.model.User;
 import org.hibernate.annotations.ColumnDefault;
 
+
 import java.time.LocalDate;
 
 @Builder
@@ -90,6 +91,14 @@ public class Company extends BaseEntity {
     @ColumnDefault("0")
     private int newApplicants;
 
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int viewCount;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int favoriteCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_idx")
     private User user;
@@ -140,5 +149,19 @@ public class Company extends BaseEntity {
 
     public void clearNewApplicants() {
         this.newApplicants = 0;
+    }
+
+    public void increaseViewCount() {
+        this.viewCount = this.viewCount + 1;
+    }
+
+    public void increaseFavoriteCount() {
+        this.favoriteCount = this.favoriteCount + 1;
+    }
+
+    public void decreaseFavoriteCount() {
+        if (this.favoriteCount > 0) {
+            this.favoriteCount = this.favoriteCount - 1;
+        }
     }
 }

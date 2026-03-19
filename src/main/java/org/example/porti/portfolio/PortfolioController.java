@@ -43,8 +43,22 @@ public class PortfolioController {
     public ResponseEntity list(
             @AuthenticationPrincipal AuthUserDetails user,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "6") int size) {
         List<PortfolioDto.portRes> dto = portfolioService.list(user, page, size);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("isSuccess", true);
+        response.put("result", dto);
+        return ResponseEntity.ok(BaseResponse.success(response));
+    }
+
+    // 특정 유저 포트폴리오 목록 조회(페이징 처리)
+    @GetMapping("/user/{userIdx}/list")
+    public ResponseEntity userList(
+            @PathVariable Long userIdx,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size) {
+        List<PortfolioDto.portRes> dto = portfolioService.userList(userIdx, page, size);
 
         Map<String, Object> response = new HashMap<>();
         response.put("isSuccess", true);
@@ -60,6 +74,13 @@ public class PortfolioController {
 
         portfolioService.updateKeywords(idx, keywords);
         return ResponseEntity.ok(BaseResponse.success("키워드가 저장되었습니다."));
+    }
+
+    // 모든 포트폴리오에 저장된 키워드 호출
+    @GetMapping("/keywords")
+    public ResponseEntity getAllKeywords(@AuthenticationPrincipal AuthUserDetails user) {
+        List<String> keywords = portfolioService.getAllKeywords(user);
+        return ResponseEntity.ok(BaseResponse.success(keywords));
     }
 
     // 포트폴리오 스타일 저장

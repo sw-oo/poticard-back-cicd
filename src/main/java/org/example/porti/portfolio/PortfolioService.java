@@ -68,6 +68,12 @@ public class PortfolioService {
         return portfolioList.stream().map(PortfolioDto.portRes::from).toList();
     }
 
+    public List<PortfolioDto.portRes> userList(Long userIdx, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<Portfolio> portfolioList = portfolioRepository.findByUserIdx(userIdx, pageable).getContent();
+        return portfolioList.stream().map(PortfolioDto.portRes::from).toList();
+    }
+
     @Transactional
     public void updateKeywords(Long portfolioIdx, List<String> keywords) {
         Portfolio portfolio = portfolioRepository.findById(portfolioIdx)
@@ -80,13 +86,18 @@ public class PortfolioService {
         Portfolio portfolio = portfolioRepository.findById(portfolioIdx)
                 .orElseThrow(() -> new RuntimeException("포트폴리오 없음"));
 
-        portfolio.setAccentColor(dto.getAccentColor());
+        portfolio.setTheme(dto.getTheme());
+        portfolio.setLayoutType(dto.getLayoutType());
 
-        for (SectionDto.Req sReq : dto.getSectionList()) {
-            Section section = sectionRepository.findById(sReq.getIdx()).get();
-            section.setSectionOrder(sReq.getSectionOrder());
+        if (dto.getSectionList() != null) {
+            for (SectionDto.Req sReq : dto.getSectionList()) {
+                sectionRepository.findById(sReq.getIdx()).ifPresent(section -> {
+                    section.setSectionOrder(sReq.getSectionOrder());
+                });
+            }
         }
     }
+
 
     @Transactional
     public void delete(Long portfolioIdx, AuthUserDetails authUser, String title) {
@@ -102,5 +113,16 @@ public class PortfolioService {
         }
 
         portfolioRepository.delete(portfolio);
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> getAllKeywords(AuthUserDetails authUser) {
+        List<Portfolio> portfolioList = portfolioRepository.findAllByUserIdx(authUser.getIdx());
+
+        return portfolioList.stream()
+                .filter(p -> p.getKeywords() != null)
+                .flatMap(p -> p.getKeywords().stream())
+                .distinct()
+                .toList();
     }
 }

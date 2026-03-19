@@ -21,8 +21,7 @@ public class PortfolioDto {
         private String period;
         private String role;
         private List<SectionDto.Req> sectionList;
-        private String accentColor;
-        private String fontFamily;
+        private String theme;
         private String layoutType;
 
         public Portfolio toEntity(String imageUrl, User user) {
@@ -30,8 +29,7 @@ public class PortfolioDto {
                     .title(this.title)
                     .period(this.period)
                     .role(this.role)
-                    .accentColor(this.accentColor)
-                    .fontFamily(this.fontFamily)
+                    .theme(this.theme)
                     .layoutType(this.layoutType)
                     .Image(imageUrl)
                     .user(user)
@@ -50,8 +48,7 @@ public class PortfolioDto {
         private String role;
         private List<String> keywords;
 
-        private String accentColor;
-        private String fontFamily;
+        private String theme;
         private String layoutType;
         private String Image;
 
@@ -66,8 +63,7 @@ public class PortfolioDto {
                     .period(entity.getPeriod())
                     .role(entity.getRole())
                     .keywords(entity.getKeywords())
-                    .accentColor(entity.getAccentColor())
-                    .fontFamily(entity.getFontFamily())
+                    .theme(entity.getTheme())
                     .layoutType(entity.getLayoutType())
                     .Image(entity.getImage())
                     .sectionList(entity.getSectionList().stream().map(SectionDto.Res::from).toList())

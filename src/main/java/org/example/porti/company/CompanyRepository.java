@@ -9,7 +9,9 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
+
 
 public interface CompanyRepository extends JpaRepository<Company, Long> {
 
@@ -28,4 +30,8 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 
     @Query("SELECT COALESCE(SUM(c.applicants), 0) FROM Company c WHERE c.user.idx = :userIdx")
     int sumApplicantsByUserIdx(@Param("userIdx") Long userIdx);
+
+    List<Company> findByPublicOpenTrueAndStatusOrderByIdxDesc(String status);
+
+    List<Company> findByUserIdxOrderByIdxDesc(Long userIdx);
 }

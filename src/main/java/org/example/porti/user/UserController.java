@@ -54,11 +54,11 @@ public class UserController {
 
         Authentication authentication = authenticationManager.authenticate(token);
         AuthUserDetails user = (AuthUserDetails) authentication.getPrincipal();
-
         if(user != null) {
+            UserDto.LoginRes res = UserDto.LoginRes.from(user);
             String jwt = jwtUtil.createToken(user.getIdx(), user.getUsername(), user.getRole(), user.getNickname());
             String cookie = String.format("ATOKEN=%s; Domain=localhost; Path=/;",jwt);
-            return ResponseEntity.ok().header("Set-Cookie", cookie).body(BaseResponse.success("성공"));
+            return ResponseEntity.ok().header("Set-Cookie", cookie).body(BaseResponse.success(res));
         }
 
         return ResponseEntity.ok(BaseResponse.fail(BaseResponseStatus.LOGIN_INVALID_USERINFO));
@@ -77,4 +77,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).location(URI.create("http://localhost:5173")).build();
     }
 
+    @GetMapping("/me")
+    public ResponseEntity me(@AuthenticationPrincipal AuthUserDetails user) {
+        UserDto.MyInfo res = userService.me(user.getIdx());
+        return ResponseEntity.ok(BaseResponse.success(res));
+    }
 }

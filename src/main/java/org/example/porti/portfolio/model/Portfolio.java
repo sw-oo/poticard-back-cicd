@@ -26,8 +26,7 @@ public class Portfolio extends BaseEntity{
     @Convert(converter = StringListConverter.class)
     private List<String> keywords; // 프로젝트의 키워드
 
-    private String accentColor; // 글씨 강조 색상
-    private String fontFamily;  // 글꼴
+    private String theme;       // 테마
     private String layoutType;  // 레이아웃
 
     private String Image; // 프로젝트 대표 이미지 경로 저장

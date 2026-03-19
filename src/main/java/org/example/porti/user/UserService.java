@@ -87,4 +87,8 @@ public class UserService implements UserDetailsService {
         user.setEnable(true);
         userRepository.save(user);
     }
+
+    public UserDto.MyInfo me(Long idx) {
+        return UserDto.MyInfo.from(userRepository.findById(idx).orElseThrow());
+    }
 }

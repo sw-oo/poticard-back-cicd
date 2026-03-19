@@ -1,9 +1,9 @@
 package org.example.porti.namecard;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.example.porti.namecard.model.Namecard;
 import org.example.porti.namecard.model.NamecardDto;
+import org.example.porti.upload.CloudUploadService;
 import org.example.porti.user.UserRepository;
 import org.example.porti.user.model.AuthUserDetails;
 import org.example.porti.user.model.User;
@@ -11,10 +11,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -22,6 +22,7 @@ import java.util.Optional;
 public class NamecardService {
     private final NamecardRepository namecardRepository;
     private final UserRepository userRepository;
+    private final CloudUploadService cloudUploadService;
 
     public NamecardDto.SliceRes list(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
@@ -55,12 +56,23 @@ public class NamecardService {
                 );
     }
 
+    @Transactional(readOnly = true)
     public NamecardDto.NamecardRes singleUser(Long userId) {
-        Namecard result = namecardRepository.findByUserIdx(userId).orElseThrow();
-        return NamecardDto.NamecardRes.toDto(result);
+        Optional<Namecard> result = namecardRepository.findByUserIdx(userId);
+        if (result.isEmpty()) {
+            return null;
+        }
+        return NamecardDto.NamecardRes.toDto(result.get());
     }
 
     public Long amount() {
         return namecardRepository.count();
+    }
+
+    public void upload(MultipartFile file, AuthUserDetails user) throws SQLException, IOException {
+        String filename = cloudUploadService.saveFile(file);
+        User entity = userRepository.findById(user.getIdx()).orElseThrow();
+        entity.setProfileImage(filename);
+        userRepository.save(entity);
     }
 }

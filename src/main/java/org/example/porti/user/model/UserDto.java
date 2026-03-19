@@ -1,13 +1,16 @@
 package org.example.porti.user.model;
 
 
+import io.portone.sdk.server.common.Country;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.Map;
 
 import static org.example.porti.common.Constants.DEFAULT_COMPANY_ROLE;
 import static org.example.porti.common.Constants.DEFAULT_USER_ROLE;
+import static org.example.porti.common.Constants.DEFAULT_PROFILE_IMAGE;
 
 public class UserDto {
 
@@ -26,6 +29,7 @@ public class UserDto {
                     .phone(this.phone)
                     .enable(false)
                     .role(DEFAULT_USER_ROLE)
+                    .profileImage(DEFAULT_PROFILE_IMAGE+this.name)
                     .build();
         }
 
@@ -73,11 +77,11 @@ public class UserDto {
         private String email;
         private String name;
 
-        public static LoginRes from(User entity) {
+        public static LoginRes from(AuthUserDetails entity) {
             return LoginRes.builder()
                     .idx(entity.getIdx())
-                    .email(entity.getEmail())
-                    .name(entity.getName())
+                    .email(entity.getUsername())
+                    .name(entity.getNickname())
                     .build();
         }
     }
@@ -92,7 +96,6 @@ public class UserDto {
         private String affiliation;
         private String career;
         private String gender;
-        private String profile_image;
     }
 
     @Getter
@@ -104,6 +107,7 @@ public class UserDto {
         private String phone;
         private boolean enable;
         private String role;
+        private String profile_image;
 
         public static OAuth from(Map<String, Object> attributes, String provider) {
             String providerId = null;
@@ -111,6 +115,7 @@ public class UserDto {
             Map properties = null;
             String name = null;
             String phone = null;
+            String profile_image = null;
 
             if (provider.equals("kakao")){
                 providerId = ((Long) attributes.get("id")).toString();
@@ -130,6 +135,7 @@ public class UserDto {
                     .phone(phone)
                     .enable(true)
                     .role(DEFAULT_USER_ROLE)
+                    .profile_image(DEFAULT_PROFILE_IMAGE+name)
                     .build();
         }
 
@@ -140,7 +146,30 @@ public class UserDto {
                     .phone(this.phone)
                     .enable(this.enable)
                     .role(this.role)
+                    .profileImage(this.profile_image)
                     .build();
         }
     }
+
+    @Builder
+    @Getter
+    public static class MyInfo {
+        private Long idx;
+        private String email;
+        private String name;
+        private String role;
+        private String affilliation;
+        private String career;
+        public static MyInfo from(User entity) {
+            return MyInfo.builder()
+                    .idx(entity.getIdx())
+                    .email(entity.getEmail())
+                    .name(entity.getName())
+                    .role(entity.getRole())
+                    .affilliation(entity.getAffiliation())
+                    .career(entity.getCareer())
+                    .build();
+        }
+    }
+
 }

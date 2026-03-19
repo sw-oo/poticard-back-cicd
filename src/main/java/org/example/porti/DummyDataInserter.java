@@ -56,8 +56,7 @@ public class DummyDataInserter {
                 userStmt.setString(10, "ROLE_USER"); // role
                 userStmt.setTimestamp(11, now); // created_at
                 userStmt.setTimestamp(12, now); // updated_at
-                userStmt.setString(13, "http://cdn.testprofileimage.api/"+String.format("%04d", i)); // profile image
-
+                userStmt.setString(13, "https://api.dicebear.com/9.x/avataaars/svg?seed=테스터" + i); // profile image
 
 
                 userStmt.addBatch(); // User 배치에 추가

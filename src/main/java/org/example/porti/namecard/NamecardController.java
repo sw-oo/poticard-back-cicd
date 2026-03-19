@@ -1,12 +1,17 @@
 package org.example.porti.namecard;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.RequiredArgsConstructor;
+import org.asynchttpclient.request.body.multipart.MultipartBody;
 import org.example.porti.common.model.BaseResponse;
+import org.example.porti.common.model.BaseResponseStatus;
 import org.example.porti.namecard.model.NamecardDto;
+import org.example.porti.upload.CloudUploadService;
 import org.example.porti.user.model.AuthUserDetails;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -14,6 +19,7 @@ import java.util.List;
 @RequestMapping("/namecard")
 @RequiredArgsConstructor
 public class NamecardController {
+
     private final NamecardService namecardService;
     // 명함 리스트(슬라이스 처리)
     @GetMapping("/list")
@@ -49,5 +55,16 @@ public class NamecardController {
     public ResponseEntity amount(){
         Long res = namecardService.amount();
         return ResponseEntity.ok(BaseResponse.success(res));
+    }
+
+    @PostMapping("/setprofile")
+    public ResponseEntity setProfile(MultipartFile file, @AuthenticationPrincipal AuthUserDetails user){
+        try{
+        namecardService.upload(file, user);
+        return ResponseEntity.ok(BaseResponse.success("성공"));
+        }
+        catch(Exception e){
+        return ResponseEntity.ok(BaseResponse.fail(BaseResponseStatus.AWS_UPLOAD_FAIL,e));
+        }
     }
 }

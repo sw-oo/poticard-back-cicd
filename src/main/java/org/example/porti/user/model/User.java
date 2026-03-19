@@ -25,6 +25,7 @@ public class User {
     private String phone; // required for private, not for enterprise
     private String gender;
     private String address;
+    @Setter
     private String profileImage;
     private String affiliation;
     private String career;
@@ -59,9 +60,6 @@ public class User {
         }
         if (StringUtils.hasText(dto.getCareer())) {
             this.career = dto.getCareer();
-        }
-        if (StringUtils.hasText(dto.getProfile_image())) {
-            this.profileImage = dto.getProfile_image();
         }
         if (StringUtils.hasText(dto.getGender())) {
             this.gender = dto.getGender();

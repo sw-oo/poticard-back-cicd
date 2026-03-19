@@ -96,7 +96,6 @@ public class UserDto {
         private String affiliation;
         private String career;
         private String gender;
-        private String profile_image;
     }
 
     @Getter
@@ -108,6 +107,7 @@ public class UserDto {
         private String phone;
         private boolean enable;
         private String role;
+        private String profile_image;
 
         public static OAuth from(Map<String, Object> attributes, String provider) {
             String providerId = null;
@@ -115,6 +115,7 @@ public class UserDto {
             Map properties = null;
             String name = null;
             String phone = null;
+            String profile_image = null;
 
             if (provider.equals("kakao")){
                 providerId = ((Long) attributes.get("id")).toString();
@@ -134,6 +135,7 @@ public class UserDto {
                     .phone(phone)
                     .enable(true)
                     .role(DEFAULT_USER_ROLE)
+                    .profile_image(DEFAULT_PROFILE_IMAGE+name)
                     .build();
         }
 
@@ -144,6 +146,7 @@ public class UserDto {
                     .phone(this.phone)
                     .enable(this.enable)
                     .role(this.role)
+                    .profileImage(this.profile_image)
                     .build();
         }
     }

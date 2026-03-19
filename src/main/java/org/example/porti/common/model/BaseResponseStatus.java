@@ -20,7 +20,8 @@ public enum BaseResponseStatus {
 
 
     // 5000번대 실패
-    FAIL(false, 5000, "요청이 실패했습니다");
+    FAIL(false, 5000, "요청이 실패했습니다"),
+    AWS_UPLOAD_FAIL(false, 5001 ,"파일 업로드에 실패습니다." );
 
     private final boolean success;
     private final int code;

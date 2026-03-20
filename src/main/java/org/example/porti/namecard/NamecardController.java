@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/namecard")
 @RequiredArgsConstructor
 public class NamecardController {
-
+// test pr discord
     private final NamecardService namecardService;
     // 명함 리스트(슬라이스 처리)
     @GetMapping("/list")

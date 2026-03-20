@@ -57,7 +57,7 @@ public class UserController {
         if(user != null) {
             UserDto.LoginRes res = UserDto.LoginRes.from(user);
             String jwt = jwtUtil.createToken(user.getIdx(), user.getUsername(), user.getRole(), user.getNickname());
-            String cookie = String.format("ATOKEN=%s; Domain=localhost; Path=/;",jwt);
+            String cookie = String.format("ATOKEN=%s; HttpOnly; Path=/;",jwt);
             return ResponseEntity.ok().header("Set-Cookie", cookie).body(BaseResponse.success(res));
         }
 

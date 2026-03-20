@@ -1,3 +1,15 @@
+server:
+  port: 443
+  error:
+    whitelabel:
+      enabled: false  # 기본 whitelabel 에러 페이지 비활성화
+    path: /error
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-type: "PKCS12"
+    key-store-password: ${KEY_STORE_PASSWORD}
+
 jdbc:
   datasource:
     proxy:

@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface NotificationRepository extends JpaRepository<NotificationEntity, Long> {
     Optional<NotificationEntity> deleteByUserIdx(Long userIdx);
     List<NotificationEntity> findAllByUserIdx(Long userIdx);
+    Optional<NotificationEntity> findByEndpoint(String endpoint);
 }

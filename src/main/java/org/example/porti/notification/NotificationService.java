@@ -8,6 +8,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.example.porti.chat.message.model.ChatMessage;
 import org.example.porti.chat.room.model.ChatRoom;
 import org.example.porti.notification.model.NotificationDto;
+import org.example.porti.notification.model.NotificationEntity;
 import org.example.porti.user.model.User;
 import org.springframework.stereotype.Service;
 import java.security.NoSuchAlgorithmException;
@@ -32,8 +33,24 @@ public class NotificationService {
 
     @Transactional
     public void subscribe(NotificationDto.Subscribe dto) {
-        notificationRepository.deleteByUserIdx(dto.getUserIdx());
-        notificationRepository.save(dto.toEntity());
+        notificationRepository.findByEndpoint(dto.getEndpoint())
+                .ifPresentOrElse(
+                        existing -> {
+                            // 이미 있다면 사용자 ID만 업데이트 (기기 주인이 바뀔 수도 있으므로)
+                            NotificationEntity updated = NotificationEntity.builder()
+                                    .idx(existing.getIdx())
+                                    .userIdx(dto.getUserIdx())
+                                    .endpoint(existing.getEndpoint())
+                                    .p256dh(dto.getKeys().get("p256dh"))
+                                    .auth(dto.getKeys().get("auth"))
+                                    .build();
+                            notificationRepository.save(updated);
+                        },
+                        () -> {
+                            // 없다면 새로 저장
+                            notificationRepository.save(dto.toEntity());
+                        }
+                );
     }
 
     // receiverIdx로 notification정보를 찾은 후 senderEmail, contents를 포함해서 푸시알림 전송

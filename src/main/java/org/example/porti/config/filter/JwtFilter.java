@@ -63,6 +63,15 @@ public class JwtFilter extends OncePerRequestFilter {
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
                     catch (ExpiredJwtException e) {
+
+                        Cookie removeCookie = new Cookie("ATOKEN", null);
+                        removeCookie.setPath("/");               // 기존 쿠키 설정과 동일한 경로여야 함
+                        removeCookie.setHttpOnly(true);
+                        removeCookie.setMaxAge(0);
+                        // removeCookie.setSecure(true);         // HTTPS 사용 시 추가
+
+                        response.addCookie(removeCookie);
+
                         handlerExceptionResolver.resolveException(request, response, null,
                                 new BaseException(BaseResponseStatus.JWT_EXPIRED));
                         return;

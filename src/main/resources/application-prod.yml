@@ -54,6 +54,10 @@ management:
 
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB      # 파일 1개당 최대 크기
+      max-request-size: 50MB
   mail:
     host: smtp.gmail.com
     port: 587
@@ -73,7 +77,7 @@ spring:
         access-key: ${AWS_ACCESS_KEY}
         secret-key: ${AWS_SECRET_KEY}
       s3:
-        bucket: be24-swoo-s3 # 본인 S3 버킷 이름
+        bucket: be24-hun # 본인 S3 버킷 이름
       region:
         static: ap-northeast-2
   security:

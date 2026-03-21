@@ -3,6 +3,7 @@ package org.example.porti.portfolio;
 import lombok.RequiredArgsConstructor;
 import org.example.porti.common.model.BaseResponse;
 import org.example.porti.portfolio.model.PortfolioDto;
+import org.example.porti.upload.CloudUploadService;
 import org.example.porti.user.model.AuthUserDetails;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class PortfolioController {
     private final PortfolioService portfolioService;
     private final AiService aiService;
+    private final CloudUploadService cloudUploadService;
 
     // 포트폴리오 생성
     @PostMapping(value = "/create", consumes = {"multipart/form-data"})
@@ -125,6 +127,22 @@ public class PortfolioController {
             return ResponseEntity.ok(BaseResponse.success("포트폴리오가 삭제되었습니다."));
         } catch (RuntimeException e) {
             return ResponseEntity.ok(BaseResponse.fail(BaseResponseStatus.FAIL, e.getMessage()));
+        }
+    }
+    @PostMapping(value = "/image-upload", consumes = {"multipart/form-data"})
+// RequestPart 대신 RequestParam으로 변경해 보세요.
+    public ResponseEntity uploadEditorImage(@RequestParam("image") MultipartFile image) {
+        try {
+            System.out.println("📸 포트폴리오 에디터 이미지 도착! 파일명: " + image.getOriginalFilename());
+
+            String imageUrl = cloudUploadService.saveFile(image);
+            return ResponseEntity.ok(BaseResponse.success(imageUrl));
+
+        } catch (Exception e) {
+            System.err.println("🚨 에러 발생: " + e.getMessage());
+            e.printStackTrace(); // <-- 이 부분에 찍히는 로그를 꼭 확인하세요!
+            return ResponseEntity.internalServerError()
+                    .body(BaseResponse.fail(BaseResponseStatus.FAIL, "업로드 실패: " + e.getMessage()));
         }
     }
 }

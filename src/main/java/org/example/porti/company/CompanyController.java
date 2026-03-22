@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RequestMapping("/company")
 @RestController
@@ -90,6 +89,13 @@ public class CompanyController {
     public ResponseEntity<?> toggleFavorite(@AuthenticationPrincipal AuthUserDetails user,
                                             @PathVariable Long idx) {
         CompanyDto.FavoriteToggleRes result = companyService.toggleFavorite(user, idx);
+        return ResponseEntity.ok(BaseResponse.success(result));
+    }
+
+    @PostMapping("/public/apply/{idx}")
+    public ResponseEntity<?> apply(@AuthenticationPrincipal AuthUserDetails user,
+                                   @PathVariable Long idx) {
+        CompanyDto.ApplyRes result = companyService.apply(user, idx);
         return ResponseEntity.ok(BaseResponse.success(result));
     }
 

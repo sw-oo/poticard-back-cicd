@@ -1,6 +1,8 @@
 package org.example.porti.company;
 
 import lombok.RequiredArgsConstructor;
+import org.example.porti.company.application.CompanyApplicationRepository;
+import org.example.porti.company.application.model.CompanyApplication;
 import org.example.porti.company.favorite.CompanyFavoriteRepository;
 import org.example.porti.company.favorite.model.CompanyFavorite;
 import org.example.porti.company.model.Company;
@@ -19,12 +21,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
 @RequiredArgsConstructor
 @Service
 public class CompanyService {
     private final CompanyRepository companyRepository;
     private final CompanyFavoriteRepository companyFavoriteRepository;
+    private final CompanyApplicationRepository companyApplicationRepository;
     private final UserRepository userRepository;
 
     @Transactional
@@ -78,14 +80,20 @@ public class CompanyService {
     public List<CompanyDto.PublicListRes> publicList(AuthUserDetails user, String keyword, String category, boolean favoriteOnly, String sort) {
         List<Company> companies = companyRepository.findByPublicOpenTrueAndStatusOrderByIdxDesc("RECRUITING");
         Set<Long> favoriteIds = getFavoriteCompanyIds(user);
+        Set<Long> appliedIds = getAppliedCompanyIds(user);
         String normalizedKeyword = keyword == null ? "" : keyword.trim().toLowerCase();
 
         return companies.stream()
                 .filter(company -> matchKeyword(company, normalizedKeyword))
                 .filter(company -> matchCategory(company, category))
                 .filter(company -> !favoriteOnly || favoriteIds.contains(company.getIdx()))
-                .sorted(resolveComparator(sort))
-                .map(company -> CompanyDto.PublicListRes.from(company, favoriteIds.contains(company.getIdx())))
+                .sorted(resolvePublicComparator(sort, user != null ? user.getIdx() : null))
+                .map(company -> CompanyDto.PublicListRes.from(
+                        company,
+                        favoriteIds.contains(company.getIdx()),
+                        appliedIds.contains(company.getIdx()),
+                        isMine(company, user != null ? user.getIdx() : null)
+                ))
                 .toList();
     }
 
@@ -99,8 +107,11 @@ public class CompanyService {
         }
 
         company.increaseViewCount();
+
         boolean favorite = isFavorite(user, company.getIdx());
-        return CompanyDto.PublicDetailRes.from(company, favorite);
+        boolean applied = isApplied(user, company.getIdx());
+
+        return CompanyDto.PublicDetailRes.from(company, favorite, applied, isMine(company, user != null ? user.getIdx() : null));
     }
 
     @Transactional
@@ -129,9 +140,44 @@ public class CompanyService {
                 });
     }
 
+    @Transactional
+    public CompanyDto.ApplyRes apply(AuthUserDetails user, Long idx) {
+        User loginUser = getRequiredUser(user);
+        Company company = companyRepository.findById(idx)
+                .orElseThrow(() -> new IllegalArgumentException("공고가 없습니다."));
+
+        if (!company.isPublicOpen() || !"RECRUITING".equals(company.getStatus())) {
+            throw new IllegalArgumentException("지원 가능한 공개 공고가 아닙니다.");
+        }
+
+        if (company.getUser() != null && company.getUser().getIdx().equals(loginUser.getIdx())) {
+            throw new IllegalArgumentException("본인 공고에는 지원할 수 없습니다.");
+        }
+
+        if (companyApplicationRepository.existsByCompanyIdxAndUserIdx(idx, loginUser.getIdx())) {
+            throw new IllegalArgumentException("이미 지원한 공고입니다.");
+        }
+
+        companyApplicationRepository.save(CompanyApplication.builder()
+                .company(company)
+                .user(loginUser)
+                .build());
+
+        company.increaseApplicants();
+        company.increaseNewApplicants();
+
+        return CompanyDto.ApplyRes.of(
+                company.getIdx(),
+                true,
+                company.getApplicants(),
+                company.getNewApplicants()
+        );
+    }
+
     @Transactional(readOnly = true)
     public List<CompanyDto.PublicListRes> recommend(AuthUserDetails user, int size) {
         Set<Long> favoriteIds = getFavoriteCompanyIds(user);
+        Set<Long> appliedIds = getAppliedCompanyIds(user);
 
         return companyRepository.findByPublicOpenTrueAndStatusOrderByIdxDesc("RECRUITING").stream()
                 .sorted(Comparator
@@ -139,7 +185,12 @@ public class CompanyService {
                         .reversed()
                         .thenComparing(Company::getUpdatedAt, Comparator.nullsLast(Comparator.reverseOrder())))
                 .limit(size)
-                .map(company -> CompanyDto.PublicListRes.from(company, favoriteIds.contains(company.getIdx())))
+                .map(company -> CompanyDto.PublicListRes.from(
+                        company,
+                        favoriteIds.contains(company.getIdx()),
+                        appliedIds.contains(company.getIdx()),
+                        isMine(company, user != null ? user.getIdx() : null)
+                ))
                 .toList();
     }
 
@@ -173,10 +224,26 @@ public class CompanyService {
                 .collect(Collectors.toSet());
     }
 
+    private Set<Long> getAppliedCompanyIds(AuthUserDetails user) {
+        if (user == null || user.getIdx() == null) {
+            return Set.of();
+        }
+        return companyApplicationRepository.findByUserIdx(user.getIdx())
+                .stream()
+                .map(application -> application.getCompany().getIdx())
+                .collect(Collectors.toSet());
+    }
+
     private boolean isFavorite(AuthUserDetails user, Long companyIdx) {
         return user != null
                 && user.getIdx() != null
                 && companyFavoriteRepository.existsByCompanyIdxAndUserIdx(companyIdx, user.getIdx());
+    }
+
+    private boolean isApplied(AuthUserDetails user, Long companyIdx) {
+        return user != null
+                && user.getIdx() != null
+                && companyApplicationRepository.existsByCompanyIdxAndUserIdx(companyIdx, user.getIdx());
     }
 
     private boolean matchKeyword(Company company, String keyword) {
@@ -214,5 +281,23 @@ public class CompanyService {
         return Comparator.comparingInt((Company company) -> company.getFavoriteCount() * 2 + company.getViewCount())
                 .reversed()
                 .thenComparing(Company::getUpdatedAt, Comparator.nullsLast(Comparator.reverseOrder()));
+    }
+
+    private Comparator<Company> resolvePublicComparator(String sort, Long loginUserIdx) {
+        Comparator<Company> baseComparator = resolveComparator(sort);
+
+        if (loginUserIdx == null) {
+            return baseComparator;
+        }
+
+        return Comparator.comparing((Company company) -> !isMine(company, loginUserIdx))
+                .thenComparing(baseComparator);
+    }
+
+    private boolean isMine(Company company, Long loginUserIdx) {
+        return loginUserIdx != null
+                && company.getUser() != null
+                && company.getUser().getIdx() != null
+                && company.getUser().getIdx().equals(loginUserIdx);
     }
 }

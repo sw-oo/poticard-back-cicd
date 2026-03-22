@@ -15,7 +15,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 public class CompanyDto {
 
     private static final String DATE_TIME_PATTERN = "yyyy-MM-dd-HH:mm:ss";
@@ -313,9 +312,11 @@ public class CompanyDto {
         private int favoriteCount;
         private int viewCount;
         private boolean favorite;
+        private boolean applied;
+        private boolean mine;
         private boolean remotePossible;
 
-        public static PublicListRes from(Company entity, boolean favorite) {
+        public static PublicListRes from(Company entity, boolean favorite, boolean applied, boolean mine) {
             return PublicListRes.builder()
                     .idx(entity.getIdx())
                     .companyName(entity.getUser() != null ? entity.getUser().getName() : "-")
@@ -328,6 +329,8 @@ public class CompanyDto {
                     .favoriteCount(entity.getFavoriteCount())
                     .viewCount(entity.getViewCount())
                     .favorite(favorite)
+                    .applied(applied)
+                    .mine(mine)
                     .remotePossible(entity.isRemotePossible())
                     .build();
         }
@@ -360,9 +363,11 @@ public class CompanyDto {
         private int favoriteCount;
         private int viewCount;
         private boolean favorite;
+        private boolean applied;
+        private boolean mine;
         private String updatedAt;
 
-        public static PublicDetailRes from(Company entity, boolean favorite) {
+        public static PublicDetailRes from(Company entity, boolean favorite, boolean applied, boolean mine) {
             return PublicDetailRes.builder()
                     .idx(entity.getIdx())
                     .companyName(entity.getUser() != null ? entity.getUser().getName() : "-")
@@ -388,6 +393,8 @@ public class CompanyDto {
                     .favoriteCount(entity.getFavoriteCount())
                     .viewCount(entity.getViewCount())
                     .favorite(favorite)
+                    .applied(applied)
+                    .mine(mine)
                     .updatedAt(formatDate(entity.getUpdatedAt()))
                     .build();
         }
@@ -405,6 +412,24 @@ public class CompanyDto {
                     .companyIdx(companyIdx)
                     .favorite(favorite)
                     .favoriteCount(favoriteCount)
+                    .build();
+        }
+    }
+
+    @Builder
+    @Getter
+    public static class ApplyRes {
+        private Long companyIdx;
+        private boolean applied;
+        private int applicants;
+        private int newApplicants;
+
+        public static ApplyRes of(Long companyIdx, boolean applied, int applicants, int newApplicants) {
+            return ApplyRes.builder()
+                    .companyIdx(companyIdx)
+                    .applied(applied)
+                    .applicants(applicants)
+                    .newApplicants(newApplicants)
                     .build();
         }
     }

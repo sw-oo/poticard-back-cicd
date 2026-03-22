@@ -1,0 +1,4 @@
+package org.example.porti.company.application;
+
+public class CompanyApplicationController {
+}

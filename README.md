@@ -119,4 +119,4 @@
 > [여기에 영상 링크 혹은 GIF 삽입]
 
 ---
-<p align="center">Copyright © 2024 Poticard Team. All rights reserved.</p>
+<p align="center">Copyright © 2026 DevOops Team. All rights reserved.</p>

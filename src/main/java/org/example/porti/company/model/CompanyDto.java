@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.example.porti.company.application.model.CompanyApplication;
+import org.example.porti.namecard.model.Namecard;
 import org.example.porti.user.model.AuthUserDetails;
+import org.example.porti.user.model.User;
 import org.springframework.data.domain.Page;
 
 import java.text.SimpleDateFormat;
@@ -396,6 +399,101 @@ public class CompanyDto {
                     .applied(applied)
                     .mine(mine)
                     .updatedAt(formatDate(entity.getUpdatedAt()))
+                    .build();
+        }
+    }
+
+    @Builder
+    @Getter
+    public static class ApplicantPageRes {
+        private Long companyIdx;
+        private String title;
+        private int applicants;
+        private int newApplicants;
+        private List<ApplicantListRes> applicantsList;
+
+        public static ApplicantPageRes of(Long companyIdx, String title, int applicants, int newApplicants, List<ApplicantListRes> applicantsList) {
+            return ApplicantPageRes.builder()
+                    .companyIdx(companyIdx)
+                    .title(title)
+                    .applicants(applicants)
+                    .newApplicants(newApplicants)
+                    .applicantsList(applicantsList)
+                    .build();
+        }
+    }
+
+    @Builder
+    @Getter
+    public static class ApplicantListRes {
+        private Long id;
+        private String name;
+        private String email;
+        private String role;
+        private String experience;
+        private String education;
+        private String appliedAt;
+        private String status;
+        private boolean isFavorite;
+        private List<String> tags;
+        private String avatar;
+        private ApplicantCardRes cardInfo;
+
+        public static ApplicantListRes from(CompanyApplication entity) {
+            User user = entity.getUser();
+            Namecard namecard = user != null ? user.getNamecard() : null;
+            String name = user != null ? user.getName() : "지원자";
+            String avatar = user != null && user.getProfileImage() != null && !user.getProfileImage().isBlank()
+                    ? user.getProfileImage()
+                    : "https://api.dicebear.com/9.x/avataaars/svg?seed=" + name;
+
+            return ApplicantListRes.builder()
+                    .id(user != null ? user.getIdx() : null)
+                    .name(name)
+                    .email(user != null ? user.getEmail() : null)
+                    .role(namecard != null ? namecard.getTitle() : null)
+                    .experience(user != null ? user.getCareer() : null)
+                    .education(user != null ? user.getAffiliation() : null)
+                    .appliedAt(formatDate(entity.getCreatedAt()))
+                    .status("NEW")
+                    .isFavorite(false)
+                    .tags(namecard != null && namecard.getKeywords() != null ? namecard.getKeywords() : Collections.emptyList())
+                    .avatar(avatar)
+                    .cardInfo(ApplicantCardRes.from(user, namecard, avatar))
+                    .build();
+        }
+    }
+
+    @Builder
+    @Getter
+    public static class ApplicantCardRes {
+        private Long userIdx;
+        private String name;
+        private String email;
+        private String phone;
+        private String address;
+        private String affiliation;
+        private String title;
+        private String description;
+        private List<String> keywords;
+        private String url;
+        private String avatar;
+        private String color;
+
+        public static ApplicantCardRes from(User user, Namecard namecard, String avatar) {
+            return ApplicantCardRes.builder()
+                    .userIdx(user != null ? user.getIdx() : null)
+                    .name(user != null ? user.getName() : null)
+                    .email(user != null ? user.getEmail() : null)
+                    .phone(user != null ? user.getPhone() : null)
+                    .address(user != null ? user.getAddress() : null)
+                    .affiliation(user != null ? user.getAffiliation() : null)
+                    .title(namecard != null ? namecard.getTitle() : null)
+                    .description(namecard != null ? namecard.getDescription() : null)
+                    .keywords(namecard != null && namecard.getKeywords() != null ? namecard.getKeywords() : Collections.emptyList())
+                    .url(namecard != null ? namecard.getUrl() : null)
+                    .avatar(avatar)
+                    .color(namecard != null ? namecard.getColor() : null)
                     .build();
         }
     }

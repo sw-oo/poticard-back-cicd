@@ -83,16 +83,18 @@ public class CompanyService {
         Set<Long> appliedIds = getAppliedCompanyIds(user);
         String normalizedKeyword = keyword == null ? "" : keyword.trim().toLowerCase();
 
+        Long loginUserIdx = user != null ? user.getIdx() : null;
+
         return companies.stream()
                 .filter(company -> matchKeyword(company, normalizedKeyword))
                 .filter(company -> matchCategory(company, category))
                 .filter(company -> !favoriteOnly || favoriteIds.contains(company.getIdx()))
-                .sorted(resolvePublicComparator(sort, user != null ? user.getIdx() : null))
+                .sorted(resolveComparator(sort))
                 .map(company -> CompanyDto.PublicListRes.from(
                         company,
                         favoriteIds.contains(company.getIdx()),
                         appliedIds.contains(company.getIdx()),
-                        isMine(company, user != null ? user.getIdx() : null)
+                        isMine(company, loginUserIdx)
                 ))
                 .toList();
     }
@@ -179,6 +181,8 @@ public class CompanyService {
         Set<Long> favoriteIds = getFavoriteCompanyIds(user);
         Set<Long> appliedIds = getAppliedCompanyIds(user);
 
+        Long loginUserIdx = user != null ? user.getIdx() : null;
+
         return companyRepository.findByPublicOpenTrueAndStatusOrderByIdxDesc("RECRUITING").stream()
                 .sorted(Comparator
                         .comparingInt((Company company) -> company.getFavoriteCount() * 3 + company.getViewCount())
@@ -189,9 +193,25 @@ public class CompanyService {
                         company,
                         favoriteIds.contains(company.getIdx()),
                         appliedIds.contains(company.getIdx()),
-                        isMine(company, user != null ? user.getIdx() : null)
+                        isMine(company, loginUserIdx)
                 ))
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public CompanyDto.ApplicantPageRes applicantList(AuthUserDetails user, Long companyIdx) {
+        Company company = findOwnedCompany(user, companyIdx);
+        List<CompanyApplication> applications = companyApplicationRepository.findApplicantsByCompanyIdx(companyIdx);
+
+        return CompanyDto.ApplicantPageRes.of(
+                company.getIdx(),
+                company.getTitle(),
+                company.getApplicants(),
+                company.getNewApplicants(),
+                applications.stream()
+                        .map(CompanyDto.ApplicantListRes::from)
+                        .toList()
+        );
     }
 
     private Company findOwnedCompany(AuthUserDetails user, Long idx) {
@@ -270,6 +290,13 @@ public class CompanyService {
         return value != null && value.toLowerCase().contains(keyword);
     }
 
+    private boolean isMine(Company company, Long loginUserIdx) {
+        return loginUserIdx != null
+                && company.getUser() != null
+                && company.getUser().getIdx() != null
+                && company.getUser().getIdx().equals(loginUserIdx);
+    }
+
     private Comparator<Company> resolveComparator(String sort) {
         if ("views".equalsIgnoreCase(sort)) {
             return Comparator.comparingInt(Company::getViewCount).reversed()
@@ -281,23 +308,5 @@ public class CompanyService {
         return Comparator.comparingInt((Company company) -> company.getFavoriteCount() * 2 + company.getViewCount())
                 .reversed()
                 .thenComparing(Company::getUpdatedAt, Comparator.nullsLast(Comparator.reverseOrder()));
-    }
-
-    private Comparator<Company> resolvePublicComparator(String sort, Long loginUserIdx) {
-        Comparator<Company> baseComparator = resolveComparator(sort);
-
-        if (loginUserIdx == null) {
-            return baseComparator;
-        }
-
-        return Comparator.comparing((Company company) -> !isMine(company, loginUserIdx))
-                .thenComparing(baseComparator);
-    }
-
-    private boolean isMine(Company company, Long loginUserIdx) {
-        return loginUserIdx != null
-                && company.getUser() != null
-                && company.getUser().getIdx() != null
-                && company.getUser().getIdx().equals(loginUserIdx);
     }
 }

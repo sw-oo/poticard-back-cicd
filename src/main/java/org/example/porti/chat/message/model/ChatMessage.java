@@ -20,6 +20,7 @@ public class ChatMessage extends BaseEntity {
     private String contents;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "contents_type", length = 20)
     private ContentsType contentsType;
 
     @Column(name = "is_read", nullable = false)

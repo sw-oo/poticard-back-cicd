@@ -37,6 +37,10 @@ public class SseController {
         return emitter;
     }
 
+    public boolean hasConnection(Long userId) {
+        return emitters.containsKey(userId);
+    }
+
     // 특정 유저에게 알림 전송 로직 (서비스 계층에서 호출)
     public void sendNotification(Long userId, Object data) {
         SseEmitter emitter = emitters.get(userId);

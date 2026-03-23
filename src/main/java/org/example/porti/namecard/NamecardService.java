@@ -9,13 +9,16 @@ import org.example.porti.user.model.AuthUserDetails;
 import org.example.porti.user.model.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -74,5 +77,23 @@ public class NamecardService {
         User entity = userRepository.findById(user.getIdx()).orElseThrow();
         entity.setProfileImage(filename);
         userRepository.save(entity);
+    }
+
+    public NamecardDto.SliceRes keywordSearch(List<String> keywords, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        if (keywords == null || keywords.isEmpty()) {
+            return NamecardDto.SliceRes.toDto(namecardRepository.findAll(pageRequest));
+        }
+
+        // JSON 배열 내부에서 각 단어가 독립적으로 존재하는지 확인하는 정규식 패턴 생성
+        // 예: keywords가 ["Java", "React"] 일 때 -> '(?=.*"Java")(?=.*"React")'
+        String pattern = keywords.stream()
+                .map(k -> "(?=.*\"" + k + "\")")
+                .collect(Collectors.joining());
+
+        Slice<Namecard> result = namecardRepository.findByAllKeywords(pattern, pageRequest);
+
+        return NamecardDto.SliceRes.toDto(result);
     }
 }

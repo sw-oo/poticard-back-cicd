@@ -82,14 +82,13 @@ public class CompanyService {
         Set<Long> favoriteIds = getFavoriteCompanyIds(user);
         Set<Long> appliedIds = getAppliedCompanyIds(user);
         String normalizedKeyword = keyword == null ? "" : keyword.trim().toLowerCase();
-
         Long loginUserIdx = user != null ? user.getIdx() : null;
 
         return companies.stream()
                 .filter(company -> matchKeyword(company, normalizedKeyword))
                 .filter(company -> matchCategory(company, category))
                 .filter(company -> !favoriteOnly || favoriteIds.contains(company.getIdx()))
-                .sorted(resolveComparator(sort))
+                .sorted(resolvePublicComparator(sort, loginUserIdx))
                 .map(company -> CompanyDto.PublicListRes.from(
                         company,
                         favoriteIds.contains(company.getIdx()),
@@ -180,7 +179,6 @@ public class CompanyService {
     public List<CompanyDto.PublicListRes> recommend(AuthUserDetails user, int size) {
         Set<Long> favoriteIds = getFavoriteCompanyIds(user);
         Set<Long> appliedIds = getAppliedCompanyIds(user);
-
         Long loginUserIdx = user != null ? user.getIdx() : null;
 
         return companyRepository.findByPublicOpenTrueAndStatusOrderByIdxDesc("RECRUITING").stream()
@@ -295,6 +293,17 @@ public class CompanyService {
                 && company.getUser() != null
                 && company.getUser().getIdx() != null
                 && company.getUser().getIdx().equals(loginUserIdx);
+    }
+
+    private Comparator<Company> resolvePublicComparator(String sort, Long loginUserIdx) {
+        Comparator<Company> baseComparator = resolveComparator(sort);
+
+        if (loginUserIdx == null) {
+            return baseComparator;
+        }
+
+        return Comparator.comparing((Company company) -> !isMine(company, loginUserIdx))
+                .thenComparing(baseComparator);
     }
 
     private Comparator<Company> resolveComparator(String sort) {

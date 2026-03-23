@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.porti.user.model.AuthUserDetails;
 import org.example.porti.utils.JwtUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -19,13 +20,16 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private final JwtUtil jwtUtil;
 
+    @Value("${server.frontUrl}")
+    private String frontUrl;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         AuthUserDetails userDetails = (AuthUserDetails) authentication.getPrincipal();
 
         String jwt = jwtUtil.createToken(userDetails.getIdx(), userDetails.getName(), userDetails.getRole(), userDetails.getNickname());
         response.addHeader("Set-cookie", "ATOKEN="+ jwt+"; Path=/");
-        String redirectUrl = "http://localhost:5173/";
+        String redirectUrl = frontUrl;
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
 }

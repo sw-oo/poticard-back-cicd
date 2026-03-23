@@ -1,4 +1,6 @@
 server:
+  frontUrl: ${FRONT_URL}
+  backUrl: ${BACK_URL}
   port: 443
   error:
     whitelabel:

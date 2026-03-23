@@ -11,6 +11,8 @@ import org.example.porti.chat.message.model.ContentsType;
 import org.example.porti.chat.room.ChatRoomRepository;
 import org.example.porti.chat.room.model.ChatRoom;
 import org.example.porti.notification.NotificationService;
+import org.example.porti.notification.SseController;
+import org.example.porti.notification.model.NotificationDto;
 import org.example.porti.upload.CloudUploadService;
 import org.example.porti.user.UserRepository;
 import org.example.porti.user.model.User;
@@ -28,8 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.example.porti.chat.message.model.ContentsType.TEXT;
-
 @Service
 @RequiredArgsConstructor
 public class ChatMessageService {
@@ -41,6 +41,7 @@ public class ChatMessageService {
     private final NotificationService notificationService;
     private final SimpMessagingTemplate messagingTemplate;
     private final CloudUploadService cloudUploadService;
+    private final SseController sseController;
 
     @Transactional
     public ChatMessageDto.Res saveMessage(ChatMessageDto.Send req, Long senderIdx) {
@@ -55,7 +56,12 @@ public class ChatMessageService {
         ChatMessage chatMessage = req.toEntity(room, sender, contents, isReceiverSubscribed);
         ChatMessage res = chatMessageRepository.save(chatMessage);
 
+        NotificationDto.Payload payload = NotificationDto.Payload.from(room, sender, res);
+
         if (!isReceiverSubscribed) {
+            if (sseController.hasConnection(receiver.getIdx())) {
+                sseController.sendNotification(receiver.getIdx(), payload);
+            }
             notificationService.sendToUser(room, sender, receiver, res);
         }
 

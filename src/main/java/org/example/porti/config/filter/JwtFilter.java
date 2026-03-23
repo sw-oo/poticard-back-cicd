@@ -2,7 +2,6 @@ package org.example.porti.config.filter;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import org.example.porti.common.exception.BaseException;
-import org.example.porti.common.exception.GlobalExceptionHandler;
 import org.example.porti.common.model.BaseResponseStatus;
 import org.example.porti.user.model.AuthUserDetails;
 import org.example.porti.utils.JwtUtil;
@@ -17,7 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
@@ -35,7 +33,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
         return path.startsWith("/user/login") ||
                 path.startsWith("/user/signup") ||
-                path.startsWith("/user/verify");
+                path.startsWith("/user/verify") ||
+                path.startsWith("/sse/");
     }
 
     @Override

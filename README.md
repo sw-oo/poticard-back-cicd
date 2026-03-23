@@ -29,9 +29,11 @@
 | :--- | :--- |
 | **🌐 서비스 URL** | [www.poticard.kro.kr](https://www.poticard.kro.kr) |
 | **📖 API 명세서** | [Swagger UI](https://api.poticard.kro.kr/swagger-ui/index.html) |
+| **📖 API 명세서 (PDF)** | [PDF](https://github.com/user-attachments/files/26173486/poticard.swagger.backup.pdf) |
 | **🎥 시연 영상** | [Demo Video](#-시연-영상) |
 
 ---
+
 
 ## 📘 프로젝트 소개
 

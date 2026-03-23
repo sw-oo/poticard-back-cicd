@@ -1,3 +1,7 @@
+server:
+  frontUrl: ${FRONT_URL}
+  backUrl: ${BACK_URL}
+
 jdbc:
   datasource:
     proxy:
@@ -95,7 +99,7 @@ spring:
             user-name-attribute: id
 
   application:
-    name: porti
+    name: poticard
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: ${DB_URL}

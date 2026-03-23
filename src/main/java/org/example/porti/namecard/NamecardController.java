@@ -67,4 +67,12 @@ public class NamecardController {
         return ResponseEntity.ok(BaseResponse.fail(BaseResponseStatus.AWS_UPLOAD_FAIL,e));
         }
     }
+
+    @PostMapping("/keywordSearch")
+    public ResponseEntity keywordSearch(@RequestBody List<String> keywords,
+                                        @RequestParam(required = true, defaultValue = "0") int page,
+                                        @RequestParam(required = true, defaultValue = "10") int size){
+        NamecardDto.SliceRes dto = namecardService.keywordSearch(keywords, page, size);
+        return ResponseEntity.ok(BaseResponse.success(dto));
+    }
 }

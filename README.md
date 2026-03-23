@@ -28,7 +28,7 @@
 | 구분 | 링크 |
 | :--- | :--- |
 | **🌐 서비스 URL** | [www.poticard.kro.kr](https://www.poticard.kro.kr) |
-| **📖 API 명세서** | [Swagger UI (Local)](https://api.poticard.kro.kr/swagger-ui/index.html) |
+| **📖 API 명세서** | [Swagger UI](https://api.poticard.kro.kr/swagger-ui/index.html) |
 | **🎥 시연 영상** | [Demo Video](#-시연-영상) |
 
 ---

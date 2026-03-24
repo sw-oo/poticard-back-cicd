@@ -32,7 +32,7 @@
 | **🌐 서비스 URL** | [www.poticard.kro.kr](https://www.poticard.kro.kr) |
 | **📖 API 명세서** | [Swagger UI](https://api.poticard.kro.kr/swagger-ui/index.html) |
 | **📖 API 명세서 (PDF)** | [PDF](https://github.com/user-attachments/files/26173486/poticard.swagger.backup.pdf) |
-| **📖 상세 설명** | https://github.com/beyond-sw-camp/be24-3rd-DevOops-Poticard/wiki |
+| **📖 상세 설명** | [WIKI](https://github.com/beyond-sw-camp/be24-3rd-DevOops-Poticard/wiki) |
 | **🎥 시연 영상** | [Demo Video](#-시연-영상) |
 ---
 

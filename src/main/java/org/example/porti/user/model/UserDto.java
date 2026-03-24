@@ -160,6 +160,8 @@ public class UserDto {
         private String role;
         private String affilliation;
         private String career;
+        private String profileImage;
+
         public static MyInfo from(User entity) {
             return MyInfo.builder()
                     .idx(entity.getIdx())
@@ -168,6 +170,7 @@ public class UserDto {
                     .role(entity.getRole())
                     .affilliation(entity.getAffiliation())
                     .career(entity.getCareer())
+                    .profileImage(entity.getProfileImage())
                     .build();
         }
     }

@@ -176,6 +176,30 @@ public class CompanyService {
         );
     }
 
+    @Transactional
+    public CompanyDto.ApplyRes cancelApply(AuthUserDetails user, Long idx) {
+        User loginUser = getRequiredUser(user);
+
+        CompanyApplication application = companyApplicationRepository.findByCompanyIdxAndUserIdx(idx, loginUser.getIdx())
+                .orElseThrow(() -> new IllegalArgumentException("지원한 공고가 없습니다."));
+
+        Company company = application.getCompany();
+
+        companyApplicationRepository.delete(application);
+
+        if (company != null) {
+            company.decreaseApplicants();
+            company.decreaseNewApplicants();
+        }
+
+        return CompanyDto.ApplyRes.of(
+                idx,
+                false,
+                company != null ? company.getApplicants() : 0,
+                company != null ? company.getNewApplicants() : 0
+        );
+    }
+
     @Transactional(readOnly = true)
     public List<CompanyDto.PublicListRes> recommend(AuthUserDetails user, int size) {
         Set<Long> favoriteIds = getFavoriteCompanyIds(user);

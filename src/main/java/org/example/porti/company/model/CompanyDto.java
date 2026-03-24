@@ -222,6 +222,7 @@ public class CompanyDto {
         private int newApplicants;
         private LocalDate deadline;
         private String status;
+        private boolean publicOpen;
         private String createdAt;
 
         public static ListRes from(Company entity) {
@@ -234,6 +235,7 @@ public class CompanyDto {
                     .newApplicants(entity.getNewApplicants())
                     .deadline(entity.getDeadline())
                     .status(entity.getStatus())
+                    .publicOpen(entity.isPublicOpen())
                     .createdAt(formatDateTime(entity.getCreatedAt()))
                     .build();
         }

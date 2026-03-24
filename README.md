@@ -1,6 +1,7 @@
 ﻿<p align="center">
   <img src="https://capsule-render.vercel.app/api?type=rounded&color=FFEB00&height=220&section=header&text=🗂️%20Poticard&fontSize=58&fontColor=000000&animation=twinkling&fontAlignY=40&desc=나만의%20커리어를%20한%20장의%20카드로&descAlignY=65&descSize=20" width="100%" />
 </p>
+
 ---
 
 ## 👥 팀원 소개

@@ -21,11 +21,24 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
     @Lock(LockModeType.OPTIMISTIC)
     Optional<Community> findByIdx(Long communityIdx);
 
-    Page<Community> findAllByOrderByIdxDesc(Pageable pageable);
+    @Query(
+            value = "SELECT c FROM Community c LEFT JOIN FETCH c.user u ORDER BY c.idx DESC",
+            countQuery = "SELECT COUNT(c) FROM Community c"
+    )
+    Page<Community> findAllWithUserOrderByIdxDesc(Pageable pageable);
 
-    Page<Community> findByUserIdxOrderByIdxDesc(Long userIdx, Pageable pageable);
+    @Query(
+            value = "SELECT c FROM Community c LEFT JOIN FETCH c.user u WHERE c.user.idx = :userIdx ORDER BY c.idx DESC",
+            countQuery = "SELECT COUNT(c) FROM Community c WHERE c.user.idx = :userIdx"
+    )
+    Page<Community> findByUserIdxWithUserOrderByIdxDesc(@Param("userIdx") Long userIdx, Pageable pageable);
 
-    List<Community> findTop5ByOrderByLikesCountDescCommentCountDescViewCountDescUpdatedAtDesc();
+    @Query("SELECT c FROM Community c LEFT JOIN FETCH c.user u WHERE c.idx = :idx")
+    Optional<Community> findByIdWithUser(@Param("idx") Long idx);
 
-    List<Community> findTop10ByUserIdxOrderByIdxDesc(Long userIdx);
+    @Query("SELECT c FROM Community c LEFT JOIN FETCH c.user u ORDER BY c.likesCount DESC, c.commentCount DESC, c.viewCount DESC, c.updatedAt DESC")
+    List<Community> findTop5WithUserOrderByHot();
+
+    @Query("SELECT c FROM Community c LEFT JOIN FETCH c.user u WHERE c.user.idx = :userIdx ORDER BY c.idx DESC")
+    List<Community> findTop10ByUserIdxWithUserOrderByIdxDesc(@Param("userIdx") Long userIdx, Pageable pageable);
 }

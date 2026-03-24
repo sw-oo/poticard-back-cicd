@@ -1,14 +1,6 @@
-﻿<div align="center">
-
-# 🗂️ Poticard
-</div>
-<div align="center">
-  <img src="logo.png" width="200" alt="Poticard Logo" />
-  <br />
-  <h3>나만의 커리어를 한 장의 카드로, AI 기반 개발자 명함 서비스</h3>
-
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=36BCF7&center=true&vCenter=true&width=600&lines=%EB%82%98%EB%A7%8C%EC%9D%98+%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4%EB%A5%BC+%EB%A7%8C%EB%93%A4%EC%96%B4%EB%B3%B4%EC%84%B8%EC%9A%94;AI%EB%A1%9C+%EC%88%98%EC%A0%95%EB%90%98%EB%8A%94+%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4;%EB%82%98%EB%A7%8C%EC%9D%98+%ED%8F%AC%ED%8A%B8%ED%8F%B4%EB%A6%AC%EC%98%A4%EB%A5%BC+%EC%B9%B4%EB%93%9C+%ED%95%9C+%EC%9E%A5%EC%97%90;%EC%B1%84%EC%9A%A9%EB%B6%80%ED%84%B0+%EC%9D%B4%EC%A7%81%EA%B9%8C%EC%A7%80" alt="Typing SVG" />
-</div>
+﻿<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=rounded&color=FFEB00&height=220&section=header&text=🗂️%20Poticard&fontSize=58&fontColor=000000&animation=twinkling&fontAlignY=40&desc=나만의%20커리어를%20한%20장의%20카드로&descAlignY=65&descSize=20" width="100%" />
+</p>
 
 ---
 
@@ -37,15 +29,12 @@
 
 ## 📘 프로젝트 소개
 
-> **"당신의 경력을 한 장의 카드로, AI가 제안하는 완벽한 포트폴리오"**
+PotiCard 서비스는 사용자의 경력 및 업력을 분석하여 구직·이직용 포트폴리오 작성을 지원하고, 핵심 키워드를 포함한 디지털 명함을 생성·관리하는 웹 서비스입니다.
 
-**PotiCard**는 개발자의 업력과 프로젝트 경험을 정교하게 분석하여, 채용 시장에서 경쟁력을 가질 수 있는 **디지털 명함 및 포트폴리오 생성 솔루션**입니다.
+사용자는 자신의 경험과 프로젝트 내용을 포트폴리오로 작성할 수 있으며, 시스템은 이를 분석하여 주요 기술 스택과 역량을 자동으로 도출합니다. 이를 통해 사용자는 자신의 전문성을 보다 명확하게 정리하고, 효율적인 자기 표현 수단으로 활용할 수 있습니다.
 
-* **맞춤형 분석**: 사용자의 경험을 분석하여 주요 기술 스택과 역량을 자동 도출합니다.
-* **자기 브랜딩**: 복잡한 이력서 대신 핵심 키워드가 담긴 디지털 명함으로 자신을 표현하세요.
-* **채용 연결**: 기업 담당자는 구직자의 핵심 역량을 데이터 기반으로 신속하게 파악하고 컨택할 수 있습니다.
+또한 기업은 본 서비스를 통해 구직자의 디지털 명함과 포트폴리오를 확인함으로써 지원자의 핵심 역량을 신속하게 파악하고, 이를 기반으로 채용 및 인재 컨택 과정에 활용할 수 있습니다.
 
----
 
 ## ✨ 핵심 기능
 
@@ -74,17 +63,17 @@
 ## 🛠 기술 스택
 
 ### 💻 Development
-| Layer | Technologies |
-| :--- | :--- |
-| **Backend** | ![Java](https://img.shields.io/badge/Java-007396?style=flat-square&logo=java&logoColor=white) ![Spring](https://img.shields.io/badge/Spring-6DB33F?style=flat-square&logo=spring&logoColor=white) ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white) |
+| Layer | Technologies                                                                                                                                                                                                        |
+| :--- |:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Backend** | ![Java](https://img.shields.io/badge/Java-007396?style=flat-square&logo=java&logoColor=white) ![Spring](https://img.shields.io/badge/Spring-6DB33F?style=flat-square&logo=spring&logoColor=white)                   |
 | **Frontend** | ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black) ![Vue.js](https://img.shields.io/badge/Vue.js-4FC08D?style=flat-square&logo=vue.js&logoColor=white) |
-| **Database** | ![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=flat-square&logo=mariadb&logoColor=white) |
+| **Database** | ![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=flat-square&logo=mariadb&logoColor=white)                                                                                                              |
 
 ### 🚀 Infrastructure & DevOps
-| Category | Technologies |
-| :--- | :--- |
-| **DevOps** | ![Kafka](https://img.shields.io/badge/Kafka-231F20?style=flat-square&logo=apachekafka&logoColor=white) ![Nginx](https://img.shields.io/badge/Nginx-009639?style=flat-square&logo=nginx&logoColor=white) |
-| **Monitoring** | ![Grafana](https://img.shields.io/badge/Grafana-F46800?style=flat-square&logo=grafana&logoColor=white) ![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=flat-square&logo=prometheus&logoColor=white) ![Jaeger](https://img.shields.io/badge/Jaeger-60D0E4?style=flat-square&logo=jaegertracing&logoColor=white) |
+| Category | Technologies                                                                                                                                                                                                                                                                                                                                                                                              |
+| :--- |:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **DevOps** |  ![Nginx](https://img.shields.io/badge/Nginx-009639?style=flat-square&logo=nginx&logoColor=white)                                                                                                                                                                                                                                                                                                         |
+| **Monitoring** | ![Grafana](https://img.shields.io/badge/Grafana-F46800?style=flat-square&logo=grafana&logoColor=white) ![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=flat-square&logo=prometheus&logoColor=white) ![Jaeger](https://img.shields.io/badge/Jaeger-60D0E4?style=flat-square&logo=jaegertracing&logoColor=white)                                                                         |
 | **Tools** | ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=flat-square&logo=figma&logoColor=white) ![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white) ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=postman&logoColor=white) ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=flat-square&logo=swagger&logoColor=black) |
 
 ---

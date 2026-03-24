@@ -78,13 +78,14 @@ public class CompanyService {
 
     @Transactional(readOnly = true)
     public List<CompanyDto.PublicListRes> publicList(AuthUserDetails user, String keyword, String category, boolean favoriteOnly, String sort) {
-        List<Company> companies = companyRepository.findByPublicOpenTrueAndStatusOrderByIdxDesc("RECRUITING");
+        List<Company> companies = companyRepository.findPublicOpenListOrderByIdxDesc();
         Set<Long> favoriteIds = getFavoriteCompanyIds(user);
         Set<Long> appliedIds = getAppliedCompanyIds(user);
         String normalizedKeyword = keyword == null ? "" : keyword.trim().toLowerCase();
         Long loginUserIdx = user != null ? user.getIdx() : null;
 
         return companies.stream()
+                .filter(this::isVisiblePublicCompany)
                 .filter(company -> matchKeyword(company, normalizedKeyword))
                 .filter(company -> matchCategory(company, category))
                 .filter(company -> !favoriteOnly || favoriteIds.contains(company.getIdx()))
@@ -100,10 +101,10 @@ public class CompanyService {
 
     @Transactional
     public CompanyDto.PublicDetailRes publicRead(AuthUserDetails user, Long idx) {
-        Company company = companyRepository.findById(idx)
+        Company company = companyRepository.findByIdWithUser(idx)
                 .orElseThrow(() -> new IllegalArgumentException("공고가 없습니다."));
 
-        if (!company.isPublicOpen() || !"RECRUITING".equals(company.getStatus())) {
+        if (!isVisiblePublicCompany(company)) {
             throw new IllegalArgumentException("공개된 공고가 아닙니다.");
         }
 
@@ -118,10 +119,10 @@ public class CompanyService {
     @Transactional
     public CompanyDto.FavoriteToggleRes toggleFavorite(AuthUserDetails user, Long idx) {
         User loginUser = getRequiredUser(user);
-        Company company = companyRepository.findById(idx)
+        Company company = companyRepository.findByIdWithUser(idx)
                 .orElseThrow(() -> new IllegalArgumentException("공고가 없습니다."));
 
-        if (!company.isPublicOpen() || !"RECRUITING".equals(company.getStatus())) {
+        if (!isVisiblePublicCompany(company)) {
             throw new IllegalArgumentException("공개된 공고만 즐겨찾기할 수 있습니다.");
         }
 
@@ -144,10 +145,10 @@ public class CompanyService {
     @Transactional
     public CompanyDto.ApplyRes apply(AuthUserDetails user, Long idx) {
         User loginUser = getRequiredUser(user);
-        Company company = companyRepository.findById(idx)
+        Company company = companyRepository.findByIdWithUser(idx)
                 .orElseThrow(() -> new IllegalArgumentException("공고가 없습니다."));
 
-        if (!company.isPublicOpen() || !"RECRUITING".equals(company.getStatus())) {
+        if (!isVisiblePublicCompany(company)) {
             throw new IllegalArgumentException("지원 가능한 공개 공고가 아닙니다.");
         }
 
@@ -181,7 +182,8 @@ public class CompanyService {
         Set<Long> appliedIds = getAppliedCompanyIds(user);
         Long loginUserIdx = user != null ? user.getIdx() : null;
 
-        return companyRepository.findByPublicOpenTrueAndStatusOrderByIdxDesc("RECRUITING").stream()
+        return companyRepository.findPublicOpenListOrderByIdxDesc().stream()
+                .filter(this::isVisiblePublicCompany)
                 .sorted(Comparator
                         .comparingInt((Company company) -> company.getFavoriteCount() * 3 + company.getViewCount())
                         .reversed()
@@ -236,9 +238,9 @@ public class CompanyService {
         if (user == null || user.getIdx() == null) {
             return Set.of();
         }
-        return companyFavoriteRepository.findByUserIdxAndCompanyStatusAndCompanyPublicOpenTrue(user.getIdx(), "RECRUITING")
+
+        return companyFavoriteRepository.findFavoriteCompanyIdsByUserIdx(user.getIdx())
                 .stream()
-                .map(favorite -> favorite.getCompany().getIdx())
                 .collect(Collectors.toSet());
     }
 
@@ -246,9 +248,9 @@ public class CompanyService {
         if (user == null || user.getIdx() == null) {
             return Set.of();
         }
-        return companyApplicationRepository.findByUserIdx(user.getIdx())
+
+        return companyApplicationRepository.findAppliedCompanyIdsByUserIdx(user.getIdx())
                 .stream()
-                .map(application -> application.getCompany().getIdx())
                 .collect(Collectors.toSet());
     }
 
@@ -262,6 +264,22 @@ public class CompanyService {
         return user != null
                 && user.getIdx() != null
                 && companyApplicationRepository.existsByCompanyIdxAndUserIdx(companyIdx, user.getIdx());
+    }
+
+    private boolean isVisiblePublicCompany(Company company) {
+        return company != null
+                && company.isPublicOpen()
+                && isOpenStatus(company.getStatus());
+    }
+
+    private boolean isOpenStatus(String status) {
+        if (status == null || status.isBlank()) {
+            return true;
+        }
+
+        return "RECRUITING".equalsIgnoreCase(status)
+                || "OPEN".equalsIgnoreCase(status)
+                || "HIRING".equalsIgnoreCase(status);
     }
 
     private boolean matchKeyword(Company company, String keyword) {

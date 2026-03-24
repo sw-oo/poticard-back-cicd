@@ -139,7 +139,7 @@ public class CommunityDto {
                     .category(entity.getCategory())
                     .solved(entity.isSolved())
                     .title(entity.getTitle())
-                    .writer(entity.isAnonymous() ? "익명" : entity.getUser().getName())
+                    .writer(resolveWriterName(entity.isAnonymous(), entity.getUser() != null ? entity.getUser().getName() : null))
                     .writerIdx(writerIdx)
                     .tags(splitTags(entity.getTags()))
                     .likesCount(entity.getLikesCount())
@@ -183,7 +183,7 @@ public class CommunityDto {
                     .solved(entity.isSolved())
                     .title(entity.getTitle())
                     .contents(entity.getContents())
-                    .writer(entity.isAnonymous() ? "익명" : entity.getUser().getName())
+                    .writer(resolveWriterName(entity.isAnonymous(), entity.getUser() != null ? entity.getUser().getName() : null))
                     .writerIdx(writerIdx)
                     .tags(splitTags(entity.getTags()))
                     .likesCount(entity.getLikesCount())
@@ -286,6 +286,18 @@ public class CommunityDto {
                 .filter(tag -> !tag.isBlank())
                 .distinct()
                 .collect(Collectors.joining(","));
+    }
+
+    private static String resolveWriterName(boolean anonymous, String writerName) {
+        if (anonymous) {
+            return "익명";
+        }
+
+        if (writerName == null || writerName.isBlank()) {
+            return "알 수 없음";
+        }
+
+        return writerName;
     }
 
     private static String formatDateTime(Date dateTime) {

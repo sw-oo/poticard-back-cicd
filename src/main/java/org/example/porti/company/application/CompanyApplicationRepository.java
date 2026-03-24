@@ -12,6 +12,14 @@ public interface CompanyApplicationRepository extends JpaRepository<CompanyAppli
     List<CompanyApplication> findByUserIdx(Long userIdx);
 
     @Query("""
+            SELECT ca.company.idx
+            FROM CompanyApplication ca
+            JOIN ca.company c
+            WHERE ca.user.idx = :userIdx
+            """)
+    List<Long> findAppliedCompanyIdsByUserIdx(@Param("userIdx") Long userIdx);
+
+    @Query("""
             SELECT ca
             FROM CompanyApplication ca
             JOIN FETCH ca.user u

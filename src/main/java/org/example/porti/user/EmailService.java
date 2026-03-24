@@ -3,6 +3,7 @@ package org.example.porti.user;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Service;
 public class EmailService {
     private final JavaMailSender mailSender;
 
+    @Value("${server.frontUrl}")
+    private String frontUrl;
+
     @Async
     public void sendWelcomeMail(String uuid, String email){
         MimeMessage message  = mailSender.createMimeMessage();
@@ -20,7 +24,6 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setTo(email);
             String subject = "[Poticard] 신규 가입 이메일 인증 안내";
-            String backurl = System.getenv("BACK_URL");
             String htmlContents = "<!DOCTYPE html>\n" +
                     "<html lang=\"ko\">\n" +
                     "<head>\n" +
@@ -52,7 +55,7 @@ public class EmailService {
                     "                    <tr>\n" +
                     "                        <td align=\"center\" style=\"padding: 30px 40px 10px 40px; background-color: #ffffff; border-bottom: 1px solid #f0f0f0;\">\n" +
                     "                            <div class=\"logo-text\" style=\"font-size: 24px; font-weight: 800; color: #1a73e8; letter-spacing: -1px;\">\n" +
-                    "                                PORTI <span style=\"font-weight: 300; color: #5f6368;\">CARD</span>\n" +
+                    "                                POTI<span style=\"font-weight: 300; color: #5f6368;\">CARD</span>\n" +
                     "                            </div>\n" +
                     "                        </td>\n" +
                     "                    </tr>\n" +
@@ -77,7 +80,7 @@ public class EmailService {
                     "                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n" +
                     "                                <tr>\n" +
                     "                                    <td align=\"center\" style=\"border-radius: 8px;\" bgcolor=\"#1a73e8\">\n" +
-                    "                                        <a href=\""+backurl+"user/verify?uuid="+uuid+"\" \n" +
+                    "                                        <a href=\""+frontUrl+"api/user/verify?uuid="+uuid+"\" \n" +
                     "                                           target=\"_blank\" \n" +
                     "                                           class=\"btn-verify\"\n" +
                     "                                           style=\"display: inline-block; padding: 18px 60px; font-size: 17px; font-weight: 700; color: #ffffff; text-align: center; background-color: #1a73e8; border-radius: 8px; border: 1px solid #1a73e8; -webkit-font-smoothing: antialiased;\">\n" +
@@ -96,7 +99,7 @@ public class EmailService {
                     "                                아래 링크를 복사하여 브라우저 주소창에 붙여넣어 주세요.<br/>\n" +
                     "                                <br/>\n" +
                     "                                <span style=\"word-break: break-all; color: #1a73e8; text-decoration: underline;\">\n" +
-                    "                                    "+backurl+"user/verify?uuid="+ uuid +"\n" +
+                    "                                    "+frontUrl+"api/user/verify?uuid="+ uuid +"\n" +
                     "                                </span>\n" +
                     "                            </p>\n" +
                     "                        </td>\n" +
@@ -109,7 +112,7 @@ public class EmailService {
                     "                                * 본인이 신청하지 않으셨다면 이 메일을 무시해 주세요.<br/>\n" +
                     "                                * 본 메일은 발신 전용으로 회신이 불가능합니다.<br/>\n" +
                     "                                <br/>\n" +
-                    "                                <strong>© PORTI CARD. All rights reserved.</strong>\n" +
+                    "                                <strong>© POTICARD. All rights reserved.</strong>\n" +
                     "                            </p>\n" +
                     "                        </td>\n" +
                     "                    </tr>\n" +

@@ -46,7 +46,7 @@ public class CommunityService {
 
         if ("MY_POST".equalsIgnoreCase(scope)) {
             User loginUser = getRequiredUser(user);
-            Page<Community> result = communityRepository.findByUserIdxOrderByIdxDesc(loginUser.getIdx(), pageRequest);
+            Page<Community> result = communityRepository.findByUserIdxWithUserOrderByIdxDesc(loginUser.getIdx(), pageRequest);
             return CommunityDto.PageRes.from(result, loginUserIdx, favoriteIds);
         }
 
@@ -56,13 +56,13 @@ public class CommunityService {
             return CommunityDto.PageRes.from(result, page, size, loginUserIdx, favoriteIds);
         }
 
-        Page<Community> result = communityRepository.findAllByOrderByIdxDesc(pageRequest);
+        Page<Community> result = communityRepository.findAllWithUserOrderByIdxDesc(pageRequest);
         return CommunityDto.PageRes.from(result, loginUserIdx, favoriteIds);
     }
 
     @Transactional
     public CommunityDto.ReadRes read(AuthUserDetails user, Long idx) {
-        Community community = communityRepository.findById(idx)
+        Community community = communityRepository.findByIdWithUser(idx)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 없습니다."));
 
         community.increaseViewCount();
@@ -94,7 +94,7 @@ public class CommunityService {
     @Transactional
     public CommunityDto.FavoriteToggleRes toggleFavorite(AuthUserDetails user, Long idx) {
         User loginUser = getRequiredUser(user);
-        Community community = communityRepository.findById(idx)
+        Community community = communityRepository.findByIdWithUser(idx)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 없습니다."));
 
         return communityFavoriteRepository.findByCommunityIdxAndUserIdx(idx, loginUser.getIdx())
@@ -124,20 +124,18 @@ public class CommunityService {
                 .map(NamecardDto.NamecardRes::toDto)
                 .orElse(null);
 
-        List<CommunityDto.ListRes> popularPosts = communityRepository.findTop5ByOrderByLikesCountDescCommentCountDescViewCountDescUpdatedAtDesc()
+        List<CommunityDto.ListRes> popularPosts = communityRepository.findTop5WithUserOrderByHot()
+                .stream()
+                .limit(5)
+                .map(entity -> CommunityDto.ListRes.from(entity, loginUserIdx, favoriteIds.contains(entity.getIdx())))
+                .toList();
+
+        List<CommunityDto.ListRes> myPosts = communityRepository.findTop10ByUserIdxWithUserOrderByIdxDesc(loginUserIdx, PageRequest.of(0, 10))
                 .stream()
                 .map(entity -> CommunityDto.ListRes.from(entity, loginUserIdx, favoriteIds.contains(entity.getIdx())))
                 .toList();
 
-        List<CommunityDto.ListRes> myPosts = communityRepository.findTop10ByUserIdxOrderByIdxDesc(loginUserIdx)
-                .stream()
-                .map(entity -> CommunityDto.ListRes.from(entity, loginUserIdx, favoriteIds.contains(entity.getIdx())))
-                .toList();
-
-        List<CommunityCommentDto.CommentRes> myComments = communityCommentRepository.findAll().stream()
-                .filter(comment -> comment.getUser() != null && loginUserIdx.equals(comment.getUser().getIdx()))
-                .sorted((a, b) -> Long.compare(b.getIdx(), a.getIdx()))
-                .limit(10)
+        List<CommunityCommentDto.CommentRes> myComments = communityCommentRepository.findTop10ByUserIdxOrderByIdxDesc(loginUserIdx, PageRequest.of(0, 10)).stream()
                 .map(comment -> CommunityCommentDto.CommentRes.from(comment, loginUserIdx))
                 .toList();
 
@@ -156,7 +154,7 @@ public class CommunityService {
     @Transactional
     public CommunityCommentDto.CommentRes registerComment(AuthUserDetails user, Long communityIdx, CommunityCommentDto.RegReq dto) {
         User loginUser = getRequiredUser(user);
-        Community community = communityRepository.findById(communityIdx)
+        Community community = communityRepository.findByIdWithUser(communityIdx)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 없습니다."));
 
         CommunityComment comment = communityCommentRepository.save(CommunityComment.builder()
@@ -192,7 +190,7 @@ public class CommunityService {
 
     private Community findOwnedCommunity(AuthUserDetails user, Long idx) {
         User loginUser = getRequiredUser(user);
-        Community community = communityRepository.findById(idx)
+        Community community = communityRepository.findByIdWithUser(idx)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 없습니다."));
 
         if (community.getUser() == null || !loginUser.getIdx().equals(community.getUser().getIdx())) {
@@ -214,9 +212,8 @@ public class CommunityService {
         if (user == null || user.getIdx() == null) {
             return Set.of();
         }
-        return communityFavoriteRepository.findByUserIdx(user.getIdx())
+        return communityFavoriteRepository.findFavoriteCommunityIdsByUserIdx(user.getIdx())
                 .stream()
-                .map(favorite -> favorite.getCommunity().getIdx())
                 .collect(Collectors.toSet());
     }
 

@@ -1,6 +1,19 @@
 ﻿<p align="center">
   <img src="https://capsule-render.vercel.app/api?type=rounded&color=FFEB00&height=220&section=header&text=🗂️%20Poticard&fontSize=58&fontColor=000000&animation=twinkling&fontAlignY=40&desc=나만의%20커리어를%20한%20장의%20카드로&descAlignY=65&descSize=20" width="100%" />
 </p>
+---
+
+
+## 👥 팀원 소개
+
+<div align="center">
+
+| **김민규** | **이성재** | **전성훈** | **최승우** |
+| :---: | :---: | :---: | :---: |
+| <img src="https://avatars.githubusercontent.com/u/244694024?v=4" width="120" style="border-radius:50%"/> | <img src="https://avatars.githubusercontent.com/u/245795542?s=64&v=4" width="120" style="border-radius:50%"/> | <img src="https://avatars.githubusercontent.com/u/153381713?s=64&v=4" width="120" style="border-radius:50%"/> | <img src="https://avatars.githubusercontent.com/u/140137784?s=64&v=4" width="120" style="border-radius:50%"/> |
+| [@luel1018](https://github.com/luel1018) | [@Tahcy-99](https://github.com/Tahcy-99) | [@1jshun](https://github.com/1jshun) | [@sw-oo](https://github.com/sw-oo) |
+
+</div>
 
 ---
 
@@ -10,7 +23,6 @@
 3. [✨ 핵심 기능](#-핵심-기능)
 4. [🛠 기술 스택](#-기술-스택)
 5. [🚀 핵심 기능 성능 개선](#-핵심-기능-성능-개선)
-6. [👥 팀원 소개](#-팀원-소개)
 ---
 
 ## 1. 🔗 바로가기
@@ -81,19 +93,6 @@ PotiCard 서비스는 사용자의 경력 및 업력을 분석하여 구직·이
 * **비동기 처리를 통한 사용자 경험 향상**: `Apache Kafka`를 도입하여 AI 분석 프로세스를 비동기화함으로써, 기존 대비 **응답 속도를 약 30% 단축**했습니다.
 * **시스템 관측성(Observability) 강화**: `Prometheus`와 `Grafana`를 연동하여 실시간 트래픽 및 시스템 메트릭을 시각화하고, 장애 대응 환경을 구축했습니다.
 * **분산 추적**: `Jaeger`를 통해 마이크로서비스 간의 요청 흐름을 추적하여 병목 지점을 파악하고 최적화했습니다.
-
----
-
-## 6. 👥 팀원 소개
-
-<div align="center">
-
-| **김민규** | **이성재** | **전성훈** | **최승우** |
-| :---: | :---: | :---: | :---: |
-| <img src="https://avatars.githubusercontent.com/u/244694024?v=4" width="120" style="border-radius:50%"/> | <img src="https://avatars.githubusercontent.com/u/245795542?s=64&v=4" width="120" style="border-radius:50%"/> | <img src="https://avatars.githubusercontent.com/u/153381713?s=64&v=4" width="120" style="border-radius:50%"/> | <img src="https://avatars.githubusercontent.com/u/140137784?s=64&v=4" width="120" style="border-radius:50%"/> |
-| [@luel1018](https://github.com/luel1018) | [@Tahcy-99](https://github.com/Tahcy-99) | [@1jshun](https://github.com/1jshun) | [@sw-oo](https://github.com/sw-oo) |
-
-</div>
 
 ---
 

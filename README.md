@@ -22,18 +22,15 @@
 2. [📘 프로젝트 소개](#-프로젝트-소개)
 3. [✨ 핵심 기능](#-핵심-기능)
 4. [🛠 기술 스택](#-기술-스택)
-5. [🚀 핵심 기능 성능 개선](#-핵심-기능-성능-개선)
 ---
 
 ## 1. 🔗 바로가기
 
-| 구분 | 링크 |
-| :--- | :--- |
-| **🌐 서비스 URL** | [www.poticard.kro.kr](https://www.poticard.kro.kr) |
-| **📖 API 명세서** | [Swagger UI](https://api.poticard.kro.kr/swagger-ui/index.html) |
-| **📖 API 명세서 (PDF)** | [PDF](https://github.com/user-attachments/files/26173486/poticard.swagger.backup.pdf) |
-| **📖 상세 설명** | [WIKI](https://github.com/beyond-sw-camp/be24-3rd-DevOops-Poticard/wiki) |
-| **🎥 시연 영상** | [Demo Video](#-시연-영상) |
+| 구분             | 링크                                                                                |
+|:---------------|:----------------------------------------------------------------------------------|
+| **🌐 홈페이지**    | [www.poticard.kro.kr](https://www.poticard.kro.kr)                                |
+| **📖 API 명세서** | [Swagger UI](https://api.poticard.kro.kr/swagger-ui/index.html)                   |
+| **📖 상세 설명**   | [Poticard WIKI](https://github.com/beyond-sw-camp/be24-3rd-DevOops-Poticard/wiki) |
 ---
 
 
@@ -49,21 +46,21 @@ PotiCard 서비스는 사용자의 경력 및 업력을 분석하여 구직·이
 ## 3. ✨ 핵심 기능
 
 <details open>
-<summary><b>🤖 AI 기반 포트폴리오 최적화</b></summary>
+<summary><b>🤖 AI 포트폴리오</b></summary>
 <div markdown="1">
   <ul>
-    <li>사용자가 작성한 프로젝트 내용을 분석하여 가독성이 낮거나 모호한 문장을 전문적인 용어로 교정합니다.</li>
-    <li>핵심 키워드를 추출하여 상단에 배치함으로써 정보 전달력을 높입니다.</li>
+    <li>작성된 프로젝트를 AI가 분석하여, 이력서에 적합한 전문적인 문장으로 교정합니다.</li>
+    <li>텍스트에서 직무 핵심 키워드를 자동으로 추출해 포트폴리오 상단에 노출시킵니다.</li>
   </ul>
 </div>
 </details>
 
-<details>
-<summary><b>🪪 스마트 디지털 명함 생성</b></summary>
+<details open>
+<summary><b>🪪 디지털 명함(PotiCard) 생성 및 공유</b></summary>
 <div markdown="1">
   <ul>
-    <li>나만의 기술 스택과 주요 성과를 카드 형태의 UI에 집약하여 제공합니다.</li>
-    <li>공유 가능한 URL을 통해 어디서든 간편하게 자신을 소개할 수 있습니다.</li>
+    <li>기술 스택과 주요 성과를 한 장의 깔끔한 카드 UI로 요약하여 제공합니다.</li>
+    <li>디지털 명함을 이용하여 채용 담당자에게 자신의 핵심 역량을 직관적으로 전달할 수 있습니다.</li>
   </ul>
 </div>
 </details>
@@ -80,19 +77,11 @@ PotiCard 서비스는 사용자의 경력 및 업력을 분석하여 구직·이
 | **Database** | ![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=flat-square&logo=mariadb&logoColor=white)                                                                                                              |
 
 ### 🚀 Infrastructure & DevOps
-| Category | Technologies                                                                                                                                                                                                                                                                                                                                                                                              |
-| :--- |:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **DevOps** |  ![Nginx](https://img.shields.io/badge/Nginx-009639?style=flat-square&logo=nginx&logoColor=white)                                                                                                                                                                                                                                                                                                         |
-| **Monitoring** | ![Grafana](https://img.shields.io/badge/Grafana-F46800?style=flat-square&logo=grafana&logoColor=white) ![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=flat-square&logo=prometheus&logoColor=white) ![Jaeger](https://img.shields.io/badge/Jaeger-60D0E4?style=flat-square&logo=jaegertracing&logoColor=white)                                                                         |
-| **Tools** | ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=flat-square&logo=figma&logoColor=white) ![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white) ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=postman&logoColor=white) ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=flat-square&logo=swagger&logoColor=black) |
-
----
-
-## 5. 🚀 핵심 기능 성능 개선
-
-* **비동기 처리를 통한 사용자 경험 향상**: `Apache Kafka`를 도입하여 AI 분석 프로세스를 비동기화함으로써, 기존 대비 **응답 속도를 약 30% 단축**했습니다.
-* **시스템 관측성(Observability) 강화**: `Prometheus`와 `Grafana`를 연동하여 실시간 트래픽 및 시스템 메트릭을 시각화하고, 장애 대응 환경을 구축했습니다.
-* **분산 추적**: `Jaeger`를 통해 마이크로서비스 간의 요청 흐름을 추적하여 병목 지점을 파악하고 최적화했습니다.
+| Category | Technologies                                                                                                                                                                                                                                                                                                                                                                                             |
+| :--- |:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **DevOps** | ![Nginx](https://img.shields.io/badge/Nginx-009639?style=flat-square&logo=nginx&logoColor=white)                                                                                                                                                                                                                                                                                                         |
+| **Monitoring** | ![Grafana](https://img.shields.io/badge/Grafana-F46800?style=flat-square&logo=grafana&logoColor=white) ![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=flat-square&logo=prometheus&logoColor=white) ![Jaeger](https://img.shields.io/badge/Jaeger-60D0E4?style=flat-square&logo=jaegertracing&logoColor=white)                                                                        |
+| **Tools** |  ![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white) ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat-square&logo=postman&logoColor=white) ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=flat-square&logo=swagger&logoColor=black)                                                                                                |
 
 ---
 

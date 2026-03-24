@@ -9,7 +9,6 @@ import org.example.porti.common.model.BaseEntity;
 import org.example.porti.user.model.User;
 import org.hibernate.annotations.ColumnDefault;
 
-
 import java.time.LocalDate;
 
 @Builder
@@ -143,8 +142,20 @@ public class Company extends BaseEntity {
         this.applicants = this.applicants + 1;
     }
 
+    public void decreaseApplicants() {
+        if (this.applicants > 0) {
+            this.applicants = this.applicants - 1;
+        }
+    }
+
     public void increaseNewApplicants() {
         this.newApplicants = this.newApplicants + 1;
+    }
+
+    public void decreaseNewApplicants() {
+        if (this.newApplicants > 0) {
+            this.newApplicants = this.newApplicants - 1;
+        }
     }
 
     public void clearNewApplicants() {

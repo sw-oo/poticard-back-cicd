@@ -6,10 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CompanyApplicationRepository extends JpaRepository<CompanyApplication, Long> {
     boolean existsByCompanyIdxAndUserIdx(Long companyIdx, Long userIdx);
     List<CompanyApplication> findByUserIdx(Long userIdx);
+    Optional<CompanyApplication> findByCompanyIdxAndUserIdx(Long companyIdx, Long userIdx);
 
     @Query("""
             SELECT ca.company.idx

@@ -99,6 +99,13 @@ public class CompanyController {
         return ResponseEntity.ok(BaseResponse.success(result));
     }
 
+    @DeleteMapping("/public/cancel/{idx}")
+    public ResponseEntity<?> cancelApply(@AuthenticationPrincipal AuthUserDetails user,
+                                         @PathVariable Long idx) {
+        CompanyDto.ApplyRes result = companyService.cancelApply(user, idx);
+        return ResponseEntity.ok(BaseResponse.success(result));
+    }
+
     @GetMapping("/public/recommend")
     public ResponseEntity<?> recommend(@AuthenticationPrincipal AuthUserDetails user,
                                        @RequestParam(required = false, defaultValue = "4") int size) {

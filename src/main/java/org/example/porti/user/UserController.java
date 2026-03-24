@@ -7,6 +7,7 @@ import org.example.porti.user.model.AuthUserDetails;
 import org.example.porti.user.model.UserDto;
 import org.example.porti.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -70,11 +71,13 @@ public class UserController {
         return ResponseEntity.ok(BaseResponse.success(BaseResponseStatus.SUCCESS));
     }
 
+    @Value("${server.frontUrl}")
+    private String frontUrl;
     @GetMapping("/verify")
     public ResponseEntity verify(@RequestParam String uuid) {
         userService.verify(uuid);
         // 인증 성공하면 프론트로 리다이렉트
-        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).location(URI.create("http://localhost:5173")).build();
+        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).location(URI.create(frontUrl)).build();
     }
 
     @GetMapping("/me")

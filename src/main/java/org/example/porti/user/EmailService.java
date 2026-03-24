@@ -24,7 +24,6 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setTo(email);
             String subject = "[Poticard] 신규 가입 이메일 인증 안내";
-            String backurl = System.getenv("BACK_URL");
             String htmlContents = "<!DOCTYPE html>\n" +
                     "<html lang=\"ko\">\n" +
                     "<head>\n" +
@@ -56,7 +55,7 @@ public class EmailService {
                     "                    <tr>\n" +
                     "                        <td align=\"center\" style=\"padding: 30px 40px 10px 40px; background-color: #ffffff; border-bottom: 1px solid #f0f0f0;\">\n" +
                     "                            <div class=\"logo-text\" style=\"font-size: 24px; font-weight: 800; color: #1a73e8; letter-spacing: -1px;\">\n" +
-                    "                                PORTI <span style=\"font-weight: 300; color: #5f6368;\">CARD</span>\n" +
+                    "                                POTI<span style=\"font-weight: 300; color: #5f6368;\">CARD</span>\n" +
                     "                            </div>\n" +
                     "                        </td>\n" +
                     "                    </tr>\n" +
@@ -113,7 +112,7 @@ public class EmailService {
                     "                                * 본인이 신청하지 않으셨다면 이 메일을 무시해 주세요.<br/>\n" +
                     "                                * 본 메일은 발신 전용으로 회신이 불가능합니다.<br/>\n" +
                     "                                <br/>\n" +
-                    "                                <strong>© PORTI CARD. All rights reserved.</strong>\n" +
+                    "                                <strong>© POTICARD. All rights reserved.</strong>\n" +
                     "                            </p>\n" +
                     "                        </td>\n" +
                     "                    </tr>\n" +

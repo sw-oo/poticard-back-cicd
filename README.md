@@ -99,13 +99,4 @@ PotiCard 서비스는 사용자의 경력 및 업력을 분석하여 구직·이
 
 ---
 
-## 7. 🎥 시연 영상
-
-### 🧑‍🦱 개인 사용자 이용 시나리오
-> [여기에 영상 링크 혹은 GIF 삽입]
-
-### 🏢 기업 사용자 이용 시나리오
-> [여기에 영상 링크 혹은 GIF 삽입]
-
----
 <p align="center">Copyright © 2026 DevOops Team. All rights reserved.</p>

@@ -10,10 +10,10 @@
 
 <div align="center">
 
-| **김민규** | **이성재** | **전성훈** | **최승우** |
-| :---: | :---: | :---: | :---: |
+| **김민규** | **이성재** | **전성훈** |                                                   **최승우우**                                                    |
+| :---: | :---: | :---: |:-------------------------------------------------------------------------------------------------------------:|
 | <img src="https://avatars.githubusercontent.com/u/244694024?v=4" width="120" style="border-radius:50%"/> | <img src="https://avatars.githubusercontent.com/u/245795542?s=64&v=4" width="120" style="border-radius:50%"/> | <img src="https://avatars.githubusercontent.com/u/153381713?s=64&v=4" width="120" style="border-radius:50%"/> | <img src="https://avatars.githubusercontent.com/u/140137784?s=64&v=4" width="120" style="border-radius:50%"/> |
-| [@luel1018](https://github.com/luel1018) | [@Tahcy-99](https://github.com/Tahcy-99) | [@1jshun](https://github.com/1jshun) | [@sw-oo](https://github.com/sw-oo) |
+| [@luel1018](https://github.com/luel1018) | [@Tahcy-99](https://github.com/Tahcy-99) | [@1jshun](https://github.com/1jshun) |                                      [@sw-oo](https://github.com/sw-oo)                                       |
 
 </div>
 

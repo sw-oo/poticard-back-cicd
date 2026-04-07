@@ -1,6 +1,7 @@
 pipeline {
   agent {
     kubernetes {
+      namespace 'csw'
       label "gradle-kaniko-${UUID.randomUUID().toString()}"
       defaultContainer 'gradle'
       yaml """

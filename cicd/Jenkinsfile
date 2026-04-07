@@ -1,4 +1,4 @@
-// #3
+// #4
 
 pipeline {
   agent {
@@ -53,7 +53,7 @@ spec:
         container('gradle') {
           checkout([$class: 'GitSCM',
             branches: [[name: '*/main']],
-            userRemoteConfigs: [[url: 'https://github.com/seungwoo0128/cicd_backend.git']]
+            userRemoteConfigs: [[url: 'https://github.com/seungwoo0128/poticard_back_cicd.git']]
           ])
         }
       }

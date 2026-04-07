@@ -1,4 +1,4 @@
-// #8
+// #9
 
 pipeline {
   agent {
@@ -10,6 +10,7 @@ pipeline {
 apiVersion: v1
 kind: Pod
 spec:
+  serviceAccountName: jenkins
   restartPolicy: Never
   containers:
     - name: gradle

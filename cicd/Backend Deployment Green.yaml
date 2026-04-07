@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: poticard-backend-green
+  labels:
+    type: backend
+    version: green
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      type: backend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        type: backend
+        version: green
+    spec:
+      containers:
+      - name: backend
+        image: nahune/poticard-backend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "1000m"
+            memory: "2048Mi"
+        envFrom:
+        - configMapRef:
+            name: backend-config

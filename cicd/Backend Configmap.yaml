@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+data:
+  FRONT_URL: "https://www.porticard.kro.kr/"
+  DB_URL: "jdbc:mariadb://poticard-mariadb-0.poticard-mariadb.default.svc.cluster.local:3306/poticard"
+  BACK_URL: "https://www.porticard.kro.kr/api/"
+  DB_USER: "root"
+  DB_PASS: "qwer1234"
+  JWT_EXPIRE: "1800000"
+  JWT_SECRET: "examplejwtsecretpleaseignoreitmustbechangedbeforeitshardrelease"
+  UPLOAD_PATH: "C:/example"
+  AWS_BUCKET_NAME: "example"
+  AWS_ACCESS_KEY: "your_aws_access_key"
+  AWS_SECRET_KEY: "your_aws_secret_key"
+  MAIL_ADDR: "sjae999@gmail.com"
+  MAIL_PASS: "sbxf irbj mydd uqrq"
+  GEMINI_API: "your_gemini_api_key"
+  PORTONE_SECRET: "your_portone_secret"
+  AES_KEY: "your_aes_encryption_key"
+  KAKAO_CLIENT_ID: "your_kakao_client_id"
+  KAKAO_CLIENT_SECRET: "your_kakao_secret"
+  KAKAO_REDIRECT_URI: "http://example.com/login/oauth2/code/kakao"
+  GOOGLE_CLIENT_ID: "your_google_id"
+  GOOGLE_CLIENT_SECRET: "your_google_secret"
+  GOOGLE_REDIRECT_URI: "http://example.com/login/oauth2/code/google"
+  JAEGER_URL: "http://jaeger-collector.istio-system.svc.cluster.local:4318/v1/traces"
